@@ -51,6 +51,24 @@ class Acopio extends Component
         );
     }
 
+    public function getAcopiosMapProperty()
+    {
+        $map = [];
+
+        foreach ($this->productores as $productor) {
+            foreach ($productor->acopios as $acopio) {
+                $map[$productor->id][$acopio->fecha] = $acopio;
+            }
+        }
+
+        return $map;
+    }
+
+    public function guardar()
+    {
+        
+    }
+
     public function render()
     {
         return view('livewire.acopio.acopio');

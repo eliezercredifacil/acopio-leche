@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('productors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('localidad_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
+            $table->foreignId('localidad_id')
+                ->constrained('localidads')
+                ->restrictOnDelete();
             // Información del productor            
             $table->string('nombre', 150);
             $table->string('cedula', 30)->nullable()->unique();
