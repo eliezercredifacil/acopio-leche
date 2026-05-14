@@ -3,6 +3,8 @@
 namespace App\Livewire\Acopio;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
+
 
 use Livewire\Component;
 use App\Models\Localidad;
@@ -14,60 +16,106 @@ class Acopio extends Component
     public $localidades;
     public $localidadId;
     public $localidad;
+    public $tipoSemana;
+    public $inicioSemana;
+    public $finSemana;
+    public $fechaReporte;
 
-    protected $queryString = ['localidadId'];
+    protected $queryString = [
+        'localidadId',
+        'tipoSemana',
+        'fechaReporte'
+    ];
 
     public function mount()
     {
+        Carbon::setLocale('es');
+
         $this->localidades = Localidad::orderBy('nombre')->get();
 
-        // Si no viene en URL, usar la primera localidad
+        // Primera localidad por defecto
         $this->localidadId ??= $this->localidades->first()?->id;
-        $this->localidad = Localidad::find($this->localidadId)?->nombre;
 
+        // Semana A por defecto
+        $this->tipoSemana ??= 'A';
 
-        $inicioSemana = Carbon::now()->startOfWeek(); // lunes por defecto
+        $this->fechaReporte ??= now()->toDateString();
+
+        // Generar fechas
+        $this->calcularSemana();
+    }
+
+    public function calcularSemana()
+    {
+        Carbon::setLocale('es');
+
+        $fecha = Carbon::parse($this->fechaReporte);
+
+        if ($this->tipoSemana === 'A') {
+
+            // Domingo → Sábado
+            $inicio = $fecha->copy()->startOfWeek(Carbon::SUNDAY);
+        } else {
+
+            // Viernes → Jueves
+            $inicio = $fecha->copy()->startOfWeek(Carbon::FRIDAY);
+        }
+
+        $this->inicioSemana = $inicio;
+        $this->finSemana = $inicio->copy()->addDays(6);
+
+        $this->fechas = [];
 
         for ($i = 0; $i < 7; $i++) {
-            $this->fechas[] = $inicioSemana->copy()->addDays($i);
+            $this->fechas[] = $inicio->copy()
+                ->addDays($i)
+                ->locale('es');
         }
     }
 
     public function getProductoresProperty()
     {
         return cache()->remember(
-            'productores_' . $this->localidadId,
-            5, // segundos
+            'productores_' . $this->localidadId . '_' . $this->tipoSemana . '_' . $this->inicioSemana->format('Ymd'),
+            5,
             fn() => Productor::with(['acopios' => function ($q) {
                 $q->whereBetween('fecha', [
-                    now()->startOfWeek(),
-                    now()->endOfWeek()
+                    $this->inicioSemana,
+                    $this->finSemana
                 ]);
             }])
                 ->where('activo', true)
                 ->where('localidad_id', $this->localidadId)
+                ->where('semana', $this->tipoSemana)
                 ->orderBy('nombre')
                 ->get()
         );
     }
 
+    public function updatedTipoSemana()
+    {
+        cache()->flush();
+        $this->calcularSemana();
+    }
+
+    public function updatedFechaReporte()
+    {
+        cache()->flush();
+        $this->calcularSemana();
+    }
+
     public function getAcopiosMapProperty()
     {
         $map = [];
-
         foreach ($this->productores as $productor) {
             foreach ($productor->acopios as $acopio) {
                 $map[$productor->id][$acopio->fecha] = $acopio;
             }
         }
-
         return $map;
     }
 
-    public function guardar()
-    {
-        
-    }
+    public function guardar() {}
 
     public function render()
     {
