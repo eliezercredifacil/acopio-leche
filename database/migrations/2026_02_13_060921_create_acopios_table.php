@@ -33,6 +33,8 @@ return new class extends Migration
 
             // 🔥 Evita duplicados por día
             $table->unique(['productor_id', 'fecha']);
+            //Indice
+            $table->index(['fecha', 'localidad_id']);
         });
     }
 

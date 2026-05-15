@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('direccion')->nullable();
             $table->boolean('activo')->default(true);
             $table->enum('semana', ['A', 'B']);
+            $table->decimal('precio_litro', 10, 2)->default(0);
             $table->string('foto')->nullable();
             $table->softDeletes();
             $table->timestamps();
