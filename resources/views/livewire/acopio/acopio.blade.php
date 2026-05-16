@@ -3,6 +3,11 @@
 
     <div class="mb-3 relative max-w-sm">
         <input type="date" class="input bg-base-100" wire:model.lazy="fechaReporte" />
+
+        {{-- Spinner global --}}
+        <div wire:loading.delay wire:target="fechaReporte">
+            <span class="loading loading-spinner loading-md"></span>
+        </div>
     </div>
 
     <div class="flex gap-2 mb-4 overflow-x-auto">
@@ -85,14 +90,18 @@
                     <th class="border border-gray-300 bg-lime-900 text-white">Total córdobas</th>
                     <th class="border border-gray-300 bg-red-900 text-white">% Deducción</th>
 
-                    <th class="border border-gray-300">Efectivo</th>
-                    <th class="border border-gray-300">Combustible</th>
-                    <th class="border border-gray-300">Alimentos</th>
-                    <th class="border border-gray-300">Lácteos</th>
+                    @foreach ($tipos as $tipo)
 
-                    <th class="border border-gray-300">Otros</th>
-                    <th class="border border-gray-300">Deducciones</th>
-                    <th class="border border-gray-300">Neto a recibir</th>
+                    <th class="border border-gray-300 text-center bg-cyan-900 text-white">
+
+                        {{ ucfirst($tipo) }}
+
+                    </th>
+
+                    @endforeach
+
+                    <th class="border border-gray-300 bg-red-900 text-white">Deducciones</th>
+                    <th class="border border-gray-300 bg-green-900 text-white">Neto a recibir</th>
                 </tr>
             </thead>
 
@@ -143,17 +152,40 @@
                 </td>
 
                 <td class="border border-gray-300 text-sm text-center font-semibold">
-                    C$ {{ number_format($this->resumen[$productor->id]['deduccion']) ?? 0 }}
+                    C$ {{ number_format($this->resumen[$productor->id]['porcentaje_compra']) ?? 0 }}
                 </td>
 
-                <td class="border border-gray-300 text-center"></td>
-                <td class="border border-gray-300 text-center"></td>
-                <td class="border border-gray-300 text-center"></td>
-                <td class="border border-gray-300 text-center"></td>
+                @foreach ($tipos as $tipo)
+                <td class="border border-gray-300 text-center" wire:key="deduction-{{ $tipo }}-{{ $productor->id }}-{{ $inicioSemana }}">
 
-                <td class="border border-gray-300 text-center"></td>
-                <td class="border border-gray-300 text-center"></td>
-                <td class="border border-gray-300 text-center"></td>
+                    <div x-data="{ editing: false, monto: '{{ $this->resumen[$productor->id][$tipo] ?? '' }}' }" class="w-full h-full">
+
+                        {{-- TEXTO --}}
+                        <div
+                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200"
+                            x-show="!editing"
+                            @click="editing = true; $nextTick(() => { $refs.inputMonto.focus(); $refs.inputMonto.select(); });">
+                            <span x-text="monto || '-'"></span>
+                        </div>
+
+                        {{-- INPUT --}}
+                        <input type="number" x-show="editing" x-ref="inputMonto" x-model="monto"
+                            @keydown.enter="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}',monto)"
+                            @blur="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}',monto)"
+                            class="w-full h-8 text-center border-none focus:outline-none bg-base-100" />
+
+                    </div>
+                </td>
+
+
+                @endforeach
+
+                <td class="border border-gray-300 text-sm text-center font-semibold">
+                    C$ {{ number_format($this->resumen[$productor->id]['deducciones']) ?? 0 }}
+                </td>
+                <td class="border border-gray-300 text-sm text-center font-semibold">
+                    C$ {{ number_format($this->resumen[$productor->id]['neto']) ?? 0 }}
+                </td>
             </tr>
             @endforeach
 

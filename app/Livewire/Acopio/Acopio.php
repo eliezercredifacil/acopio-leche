@@ -8,6 +8,7 @@ use Livewire\Component;
 use App\Models\Localidad;
 use App\Models\Productor;
 use App\Models\Acopio as AcopioModel;
+use App\Models\Deduction;
 
 class Acopio extends Component
 {
@@ -25,11 +26,9 @@ class Acopio extends Component
 
     public $fechaReporte;
 
-    protected $queryString = [
-        'localidadId',
-        'tipoSemana',
-        'fechaReporte'
-    ];
+    public $tipos = ['efectivo', 'combustible', 'alimentos', 'lacteos', 'otros'];
+
+    protected $queryString = ['localidadId', 'tipoSemana', 'fechaReporte'];
 
     public function mount()
     {
@@ -106,6 +105,11 @@ class Acopio extends Component
                         $this->inicioSemana,
                         $this->finSemana
                     ]);
+                },
+
+                'deductions' => function ($q) {
+
+                    $q->where('semana_inicio', $this->inicioSemana);
                 }
             ])
                 ->where('activo', true)
@@ -145,25 +149,98 @@ class Acopio extends Component
 
         foreach ($this->productores as $productor) {
 
-            $totalLitros = $productor->acopios->sum('litros');
+            // =========================
+            // ACOPIOS
+            // =========================
 
-            $totalCordobas = $productor->acopios->sum('total');
+            $totalLitros = $productor->acopios
+                ->sum('litros');
+
+            $totalCordobas = $productor->acopios
+                ->sum('total');
 
             $precioLitro = $productor->precio_litro;
 
-            $deduccion = $totalCordobas * 0.013;
+            // =========================
+            // % DEDUCCIÓN COMPRA
+            // =========================
 
-            $neto = $totalCordobas - $deduccion;
+            $porcentajeCompra =
+                $totalCordobas * 0.013;
+
+            // =========================
+            // DEDUCCIONES
+            // =========================
+
+            $efectivo = $productor->deductions
+                ->where('tipo', 'efectivo')
+                ->sum('monto');
+
+            $combustible = $productor->deductions
+                ->where('tipo', 'combustible')
+                ->sum('monto');
+
+            $alimentos = $productor->deductions
+                ->where('tipo', 'alimentos')
+                ->sum('monto');
+
+            $lacteos = $productor->deductions
+                ->where('tipo', 'lacteos')
+                ->sum('monto');
+
+            $otros = $productor->deductions
+                ->where('tipo', 'otros')
+                ->sum('monto');
+
+            // =========================
+            // TOTAL DEDUCCIONES
+            // =========================
+
+            $totalDeducciones =
+                $porcentajeCompra +
+                $efectivo +
+                $combustible +
+                $alimentos +
+                $lacteos +
+                $otros;
+
+            // =========================
+            // NETO
+            // =========================
+
+            $neto =
+                $totalCordobas -
+                $totalDeducciones;
+
+            // =========================
+            // RESUMEN FINAL
+            // =========================
 
             $data[$productor->id] = [
 
+                // ACOPIOS
                 'litros' => $totalLitros,
 
                 'precio' => $precioLitro,
 
                 'cordobas' => $totalCordobas,
 
-                'deduccion' => $deduccion,
+                // DEDUCCIÓN %
+                'porcentaje_compra' => $porcentajeCompra,
+
+                // DEDUCCIONES
+                'efectivo' => $efectivo,
+
+                'combustible' => $combustible,
+
+                'alimentos' => $alimentos,
+
+                'lacteos' => $lacteos,
+
+                'otros' => $otros,
+
+                // TOTALES
+                'deducciones' => $totalDeducciones,
 
                 'neto' => $neto,
             ];
@@ -191,6 +268,33 @@ class Acopio extends Component
 
         cache()->forget($this->cacheKey());
     }
+
+    public function guardarDeduccion($productorId, $tipo, $monto)
+    {
+        // Convertir a número
+        $monto = (float) $monto;
+
+        // Evitar negativos
+        if ($monto < 0) {
+            $monto = 0;
+        }
+
+        Deduction::updateOrCreate(
+            [
+                'productor_id' => $productorId,
+                'semana_inicio' => $this->inicioSemana,
+                'tipo' => $tipo,
+            ],
+
+            [
+                'localidad_id' => $this->localidadId,
+                'monto' => $monto,
+            ]
+        );
+
+        cache()->forget($this->cacheKey());
+    }
+
 
     public function render()
     {

@@ -38,4 +38,9 @@ class Productor extends Model
     {
         return $this->hasMany(Acopio::class);
     }
+
+    public function deductions()
+    {
+        return $this->hasMany(Deduction::class);
+    }
 }
