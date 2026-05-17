@@ -117,14 +117,14 @@
                 <td class="border border-gray-300 p-0 text-center" wire:key="celda-{{ $productor->id }}-{{ $fecha }}-{{ $tipoSemana }}"
                     title="Precio del dia: C$ {{ number_format($acopio?->precio ?? 0, 2) }}">
 
-                    <div x-data="{ editing: false, litros: '{{ $acopio ? rtrim(rtrim($acopio->litros, '0'), '.') : '' }}' }" class="w-full h-full">
+                    <div x-data="{ editing: false, litros: '{{ $acopio ? (int) $acopio->litros : '' }}' }" class="w-full h-full">
 
                         {{-- MODO TEXTO --}}
                         <div
                             x-show="!editing"
                             @click="editing = true; $nextTick(() => { $refs.litros.focus(); $refs.litros.select(); });"
                             class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200">
-                            <span x-text="litros || ''"></span>
+                            <span x-text="litros || '' "></span>
                         </div>
 
                         {{-- MODO INPUT --}}
@@ -156,7 +156,7 @@
                 </td>
 
                 @foreach ($tipos as $tipo)
-                <td class="border border-gray-300 text-center" wire:key="deduction-{{ $tipo }}-{{ $productor->id }}-{{ $inicioSemana }}">
+                <td class="border border-gray-300 text-center p-0" wire:key="deduction-{{ $tipo }}-{{ $productor->id }}-{{ $inicioSemana }}">
 
                     <div x-data="{ editing: false, monto: '{{ $this->resumen[$productor->id][$tipo] ?? '' }}' }" class="w-full h-full">
 
@@ -180,7 +180,7 @@
 
                 @endforeach
 
-                <td class="border border-gray-300 text-sm text-center font-semibold">
+                <td class="border border-gray-300 text-sm text-center text-error font-semibold">
                     C$ {{ number_format($this->resumen[$productor->id]['deducciones']) ?? 0 }}
                 </td>
                 <td class="border border-gray-300 text-sm text-center font-semibold">
@@ -188,6 +188,108 @@
                 </td>
             </tr>
             @endforeach
+
+
+
+            <tr>
+
+                <td class="bg-gray-600 text-white sticky left-0 z-10 border border-gray-300 whitespace-nowrap font-bold">
+                    Totales en campo <i class="fa-brands fa-pagelines"></i>
+                </td>
+
+                @foreach ($fechas as $fecha)
+                <td class="border text-center border-gray-300 font-bold">
+                    {{ $this->totalesDiarios[$fecha] ?? 0 }}
+                </td>
+                @endforeach
+
+                <td class="border border-gray-300 text-center">
+                    {{ number_format($this->totalesGenerales['litros'], 0) }}
+                </td>
+
+                <td class="border border-gray-300 text-center">-</td>
+
+                {{-- TOTAL CÓRDOBAS --}}
+                <td class="border border-gray-300 text-center">
+                    C$ {{ number_format($this->totalesGenerales['cordobas'], 0) }}
+                </td>
+
+                {{-- % DEDUCCIÓN --}}
+                <td class="border border-gray-300 text-center">
+                    C$ {{ number_format($this->totalesGenerales['porcentaje_compra'], 0) }}
+                </td>
+
+                {{-- EFECTIVO --}}
+                <td class="border border-gray-300 text-center whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['efectivo'], 0) }}
+                </td>
+
+                {{-- COMBUSTIBLE --}}
+                <td class="border border-gray-300 text-center whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['combustible'], 0) }}
+                </td>
+
+                {{-- ALIMENTOS --}}
+                <td class="border border-gray-300 text-center whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['alimentos'], 0) }}
+                </td>
+
+                {{-- LACTEOS --}}
+                <td class="border border-gray-300 text-center whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['lacteos'], 0) }}
+                </td>
+
+                {{-- OTROS --}}
+                <td class="border border-gray-300 text-center whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['otros'], 0) }}
+                </td>
+
+                {{-- TOTAL DEDUCCIONES --}}
+                <td class="border border-gray-300 text-center text-error whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['deducciones'], 0) }}
+                </td>
+
+                {{-- NETO --}}
+                <td class="border border-gray-300 text-center text-success whitespace-nowrap">
+                    C$ {{ number_format($this->totalesGenerales['neto'], 0) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+                <td class="bg-gray-600 text-white sticky left-0 z-10 border border-gray-300 whitespace-nowrap font-bold">
+                    Totales en acopio <i class="fa-solid fa-house-chimney-window"></i>
+                </td>
+
+                @foreach ($fechas as $fecha)
+                @php $acopio = $this->acopioTotalesMap[$fecha] ?? null; @endphp
+
+                <td wire:key="acopio-total-{{ $localidadId }}-{{ $tipoSemana }}-{{ $fecha }}" class="border border-gray-300 p-0 text-center align-middle">
+
+                    <div x-data="{ editing: false, litros: '{{ $acopio ? (int) $acopio->litros : '' }}' }" class="w-full h-full">
+
+                        {{-- TEXTO --}}
+                        <div x-show="!editing" @click="editing = true; $nextTick(() => { $refs.inputLitros.focus(); $refs.inputLitros.select(); });"
+                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200">
+                            <span x-text="litros || ''"></span>
+                        </div>
+
+                        {{-- INPUT --}}
+                        <input x-show="editing" x-ref="inputLitros" x-model="litros"
+                            @keydown.enter.prevent=" editing = false; $wire.guardarAcopioTotal('{{ $fecha }}', litros);"
+                            @blur="if(editing){ editing = false; $wire.guardarAcopioTotal('{{ $fecha }}', litros);}"
+                            type="number" class="w-full p-0 text-center border-none focus:outline-none bg-base-100" />
+
+                    </div>
+
+                </td>
+
+                @endforeach
+
+            </tr>
+
+
 
         </table>
 

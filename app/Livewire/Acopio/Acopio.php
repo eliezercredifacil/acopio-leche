@@ -9,6 +9,7 @@ use App\Models\Localidad;
 use App\Models\Productor;
 use App\Models\Acopio as AcopioModel;
 use App\Models\Deduction;
+use App\Models\TotalesAcopio;
 
 class Acopio extends Component
 {
@@ -293,6 +294,99 @@ class Acopio extends Component
         );
 
         cache()->forget($this->cacheKey());
+    }
+
+
+    public function getTotalesDiariosProperty()
+    {
+        $totales = [];
+
+        foreach ($this->fechas as $fecha) {
+
+            $total = 0;
+
+            foreach ($this->productores as $productor) {
+
+                $acopio = $this->acopiosMap[$productor->id][$fecha] ?? null;
+
+                $total += $acopio?->litros ?? 0;
+            }
+
+            $totales[$fecha] = $total;
+        }
+
+        return $totales;
+    }
+
+    public function getTotalesGeneralesProperty()
+    {
+        return [
+
+            // ACOPIOS
+            'litros' => collect($this->resumen)
+                ->sum('litros'),
+
+            'cordobas' => collect($this->resumen)
+                ->sum('cordobas'),
+
+            // DEDUCCIONES
+            'porcentaje_compra' => collect($this->resumen)
+                ->sum('porcentaje_compra'),
+
+            'efectivo' => collect($this->resumen)
+                ->sum('efectivo'),
+
+            'combustible' => collect($this->resumen)
+                ->sum('combustible'),
+
+            'alimentos' => collect($this->resumen)
+                ->sum('alimentos'),
+
+            'lacteos' => collect($this->resumen)
+                ->sum('lacteos'),
+
+            'otros' => collect($this->resumen)
+                ->sum('otros'),
+
+            // TOTALES
+            'deducciones' => collect($this->resumen)
+                ->sum('deducciones'),
+
+            'neto' => collect($this->resumen)
+                ->sum('neto'),
+        ];
+    }
+
+    public function getAcopioTotalesMapProperty()
+    {
+        return TotalesAcopio::whereBetween('fecha', [
+            $this->inicioSemana,
+            $this->finSemana
+        ])
+            ->where('localidad_id', $this->localidadId)
+            ->where('tipo_semana', $this->tipoSemana)
+            ->get()
+            ->keyBy('fecha');
+    }
+
+    public function guardarAcopioTotal($fecha, $litros)
+    {
+        $litros = (float) $litros;
+
+        TotalesAcopio::updateOrCreate(
+
+            [
+                'localidad_id' => $this->localidadId,
+
+                'fecha' => $fecha,
+
+                'tipo_semana' => $this->tipoSemana,
+            ],
+
+            [
+                'litros' => $litros,
+            ]
+        );
     }
 
 
