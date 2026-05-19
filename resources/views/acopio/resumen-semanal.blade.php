@@ -11,8 +11,8 @@
         <div class="max-w-screen-full mx-auto sm:px-6 lg:px-8">            
 
             <x-acopio.menu-acopio />
-
-            <livewire:acopio.resumen-semanal />            
+                    
+            <livewire:acopio.resumen-semanal />
 
         </div>
 

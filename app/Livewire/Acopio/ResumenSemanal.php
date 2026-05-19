@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Acopio;
 
 use Livewire\Component;
 
 class ResumenSemanal extends Component
 {
     public $fechaReporte;
+
 
     public function render()
     {
