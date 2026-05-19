@@ -369,6 +369,81 @@ class Acopio extends Component
             ->keyBy('fecha');
     }
 
+    public function getTotalesAcopioProperty()
+    {
+        $totales = [];
+
+        foreach ($this->fechas as $fecha) {
+
+            $acopio = $this->acopioTotalesMap[$fecha] ?? null;
+
+            $totales[$fecha] = $acopio?->litros ?? 0;
+        }
+
+        return $totales;
+    }
+
+    public function getTotalAcopioSemanaProperty()
+    {
+        return collect($this->totalesAcopio)
+            ->sum();
+    }
+
+    public function getLitrosPerdidosProperty()
+    {
+        $data = [];
+        foreach ($this->fechas as $fecha) {
+
+            $campo = $this->totalesDiarios[$fecha] ?? 0;
+
+            $acopio = $this->totalesAcopio[$fecha] ?? 0;
+
+            $data[$fecha] = $campo - $acopio;
+        }
+        return $data;
+    }
+
+    public function getTotalLitrosPerdidosProperty()
+    {
+        return collect($this->litrosPerdidos)
+            ->sum();
+    }
+
+    public function getPorcentajeLitrosPerdidosProperty()
+    {
+        $data = [];
+
+        foreach ($this->fechas as $fecha) {
+
+            $campo = $this->totalesDiarios[$fecha] ?? 0;
+
+            $perdido = $this->litrosPerdidos[$fecha] ?? 0;
+
+            if ($campo <= 0) {
+
+                $data[$fecha] = 0;
+
+                continue;
+            }
+
+            $data[$fecha] = ($perdido / $campo) * 100;
+        }
+
+        return $data;
+    }
+
+    public function getTotalPorcentajeLitrosPerdidosProperty()
+    {
+        $campo = collect($this->totalesDiarios)->sum();
+
+        $perdido = $this->totalLitrosPerdidos;
+
+        if ($campo <= 0) {
+            return 0;
+        }
+        return ($perdido / $campo) * 100;
+    }
+
     public function guardarAcopioTotal($fecha, $litros)
     {
         $litros = (float) $litros;

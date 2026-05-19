@@ -250,7 +250,7 @@
                 </td>
 
                 {{-- NETO --}}
-                <td class="border border-gray-300 text-center text-success whitespace-nowrap">
+                <td class="border border-gray-300 text-center text-success whitespace-nowrap font-bold">
                     C$ {{ number_format($this->totalesGenerales['neto'], 0) }}
                 </td>
 
@@ -287,8 +287,49 @@
 
                 @endforeach
 
+                <td class="border border-gray-300 text-center text-success whitespace-nowrap font-bold">
+                    {{ number_format($this->totalAcopioSemana, 0) }}
+                </td>
+
             </tr>
 
+            <tr>
+                <td class="bg-gray-600 text-white sticky left-0 z-10 border border-gray-300 whitespace-nowrap font-bold">
+                    Litros perdidos <i class="fa-solid fa-circle-minus"></i>
+                </td>
+
+                @foreach ($fechas as $fecha)
+                <td class="border border-gray-300 text-center font-bold {{ ($this->litrosPerdidos[$fecha] ?? 0) > 0 ? 'text-error font-bold' : 'text-success' }}">
+                    {{ number_format($this->litrosPerdidos[$fecha] ?? 0, 0) }}
+                </td>
+                @endforeach
+
+                {{-- TOTAL --}}
+                <td class="border border-gray-300 text-center text-error font-bold">
+                    {{ number_format($this->totalLitrosPerdidos, 0) }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <td class="bg-gray-600 text-white sticky left-0 z-10 border border-gray-300 whitespace-nowrap font-bold">
+                    % litros perdidos
+                </td>
+
+                @foreach ($fechas as $fecha)
+
+                <td class="border border-gray-300 text-center {{ ($this->porcentajeLitrosPerdidos[$fecha] ?? 0) > 0 ? 'text-warning' : 'text-success' }}">
+                    {{ number_format($this->porcentajeLitrosPerdidos[$fecha] ?? 0, 2) }}%
+                </td>
+
+                @endforeach
+
+                {{-- TOTAL --}}
+                <td class="border border-gray-300 text-center font-bold text-warning">
+                    {{ number_format( $this->totalPorcentajeLitrosPerdidos, 2 ) }}%
+                </td>
+
+            </tr>
 
 
         </table>
