@@ -13,6 +13,7 @@ class Acopio extends Model
         'litros',
         'precio',
         'total',
+        'tipo_semana',
     ];
 
 

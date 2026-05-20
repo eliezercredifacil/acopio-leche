@@ -166,8 +166,7 @@ class Acopio extends Component
             // % DEDUCCIÓN COMPRA
             // =========================
 
-            $porcentajeCompra =
-                $totalCordobas * 0.013;
+            $porcentajeCompra = $totalCordobas * 0.013;
 
             // =========================
             // DEDUCCIONES
@@ -197,21 +196,12 @@ class Acopio extends Component
             // TOTAL DEDUCCIONES
             // =========================
 
-            $totalDeducciones =
-                $porcentajeCompra +
-                $efectivo +
-                $combustible +
-                $alimentos +
-                $lacteos +
-                $otros;
-
+            $totalDeducciones = $porcentajeCompra + $efectivo + $combustible + $alimentos + $lacteos + $otros;
             // =========================
             // NETO
             // =========================
 
-            $neto =
-                $totalCordobas -
-                $totalDeducciones;
+            $neto = $totalCordobas - $totalDeducciones;
 
             // =========================
             // RESUMEN FINAL
@@ -225,10 +215,8 @@ class Acopio extends Component
                 'precio' => $precioLitro,
 
                 'cordobas' => $totalCordobas,
-
                 // DEDUCCIÓN %
                 'porcentaje_compra' => $porcentajeCompra,
-
                 // DEDUCCIONES
                 'efectivo' => $efectivo,
 
@@ -239,7 +227,6 @@ class Acopio extends Component
                 'lacteos' => $lacteos,
 
                 'otros' => $otros,
-
                 // TOTALES
                 'deducciones' => $totalDeducciones,
 
@@ -261,6 +248,7 @@ class Acopio extends Component
             ],
             [
                 'localidad_id' => $this->localidadId,
+                'tipo_semana' => $this->tipoSemana,
                 'litros' => $litros,
                 'precio' => $precio_litro ?? 0,
                 'total' => $litros * $precio_litro
@@ -321,39 +309,26 @@ class Acopio extends Component
     public function getTotalesGeneralesProperty()
     {
         return [
-
             // ACOPIOS
-            'litros' => collect($this->resumen)
-                ->sum('litros'),
+            'litros' => collect($this->resumen)->sum('litros'),
 
-            'cordobas' => collect($this->resumen)
-                ->sum('cordobas'),
-
+            'cordobas' => collect($this->resumen)->sum('cordobas'),
             // DEDUCCIONES
-            'porcentaje_compra' => collect($this->resumen)
-                ->sum('porcentaje_compra'),
+            'porcentaje_compra' => collect($this->resumen)->sum('porcentaje_compra'),
 
-            'efectivo' => collect($this->resumen)
-                ->sum('efectivo'),
+            'efectivo' => collect($this->resumen)->sum('efectivo'),
 
-            'combustible' => collect($this->resumen)
-                ->sum('combustible'),
+            'combustible' => collect($this->resumen)->sum('combustible'),
 
-            'alimentos' => collect($this->resumen)
-                ->sum('alimentos'),
+            'alimentos' => collect($this->resumen)->sum('alimentos'),
 
-            'lacteos' => collect($this->resumen)
-                ->sum('lacteos'),
+            'lacteos' => collect($this->resumen)->sum('lacteos'),
 
-            'otros' => collect($this->resumen)
-                ->sum('otros'),
-
+            'otros' => collect($this->resumen)->sum('otros'),
             // TOTALES
-            'deducciones' => collect($this->resumen)
-                ->sum('deducciones'),
+            'deducciones' => collect($this->resumen)->sum('deducciones'),
 
-            'neto' => collect($this->resumen)
-                ->sum('neto'),
+            'neto' => collect($this->resumen)->sum('neto'),
         ];
     }
 
@@ -462,6 +437,8 @@ class Acopio extends Component
                 'litros' => $litros,
             ]
         );
+
+        cache()->forget($this->cacheKey());
     }
 
 

@@ -28,13 +28,14 @@ return new class extends Migration
             $table->decimal('litros', 10, 2);
             $table->decimal('precio', 10, 2);
             $table->decimal('total', 12, 2);
+            $table->enum('tipo_semana', ['A', 'B']);
 
             $table->timestamps();
 
             // 🔥 Evita duplicados por día
             $table->unique(['productor_id', 'fecha']);
             //Indice
-            $table->index(['fecha', 'localidad_id']);
+            $table->index(['fecha', 'localidad_id','tipo_semana']);
         });
     }
 
