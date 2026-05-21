@@ -61,6 +61,13 @@
                 <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total entregados</th>
                 <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total cordobas</th>
                 <th class="bg-red-800 text-white border border-gray-300 text-center">% Deducción</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center">Efectivo</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center">Combustible</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center">Alimentos</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center">Lácteos</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center">Otros</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total Deducciones</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Neto a recibir</th>
             </tr>
 
             @foreach ($this->localidades as $localidad)
@@ -95,7 +102,42 @@
 
                 {{-- PORCENTAJE DEDUCCIÓN --}}
                 <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
-                    C$ {{ number_format($this->porcentajeDeduccion[$localidad->id] ?? 0, 2) }}
+                    C$ {{ number_format($this->porcentajeDeduccion[$localidad->id] ?? 0, 0) }}
+                </td>
+
+                {{-- EFECTIVO --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->deducciones[$localidad->id]['efectivo'] ?? 0, 0) }}
+                </td>
+
+                {{-- COMBUSTIBLE --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->deducciones[$localidad->id]['combustible'] ?? 0, 0) }}
+                </td>
+
+                {{-- ALIMENTOS --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->deducciones[$localidad->id]['alimentos'] ?? 0, 0) }}
+                </td>
+
+                {{-- LACTEOS --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->deducciones[$localidad->id]['lacteos'] ?? 0, 0) }}
+                </td>
+
+                {{-- OTROS --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->deducciones[$localidad->id]['otros'] ?? 0, 0) }}
+                </td>
+
+                {{-- TOTAL DEDUCCIONES --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->totalSemanalDeducciones[$localidad->id] ?? 0, 0) }}
+                </td>
+
+                {{-- NETO A RECIBIR --}}
+                <td class="text-center border border-gray-300 font-bold bg-slate-700 text-white dark:bg-slate-800 dark:text-gray-200">
+                    C$ {{ number_format($this->netoSemanal[$localidad->id] ?? 0, 0) }}
                 </td>
 
             </tr>
@@ -123,7 +165,35 @@
                 </td>
 
                 <td class="text-center font-bold text-error border border-gray-300">
-                    C$ {{ number_format( $this->TotalGeneralPorcentajeDeduccion, 2 ) }}
+                    C$ {{ number_format( $this->TotalGeneralPorcentajeDeduccion, 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeduccion('efectivo'), 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeduccion('combustible'), 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeduccion('alimentos'), 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeduccion('lacteos'), 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeduccion('otros'), 0 ) }}
+                </td>
+
+                <td class="text-center font-bold text-error border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralDeducciones, 0 ) }}
+                </td>
+                
+                <td class="text-center font-bold text-success border border-gray-300">
+                    C$ {{ number_format( $this->totalGeneralNeto, 0 ) }}
                 </td>
 
             </tr>

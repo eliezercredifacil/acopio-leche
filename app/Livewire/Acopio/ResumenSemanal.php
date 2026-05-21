@@ -7,6 +7,7 @@ use App\Models\Acopio;
 use App\Models\Localidad;
 use Livewire\Component;
 use App\Models\TotalesAcopio;
+use App\Models\Deduction;
 
 class ResumenSemanal extends Component
 {
@@ -262,6 +263,110 @@ class ResumenSemanal extends Component
     public function getTotalGeneralPorcentajeDeduccionProperty()
     {
         return collect($this->porcentajeDeduccion)
+            ->sum();
+    }
+
+    public function getDeduccionesProperty()
+    {
+        $rows = Deduction::selectRaw('
+            localidad_id,
+            tipo,
+            SUM(monto) as total
+        ')
+
+            ->where(
+                'semana_inicio',
+                $this->inicioSemana
+            )
+
+            ->groupBy(
+                'localidad_id',
+                'tipo'
+            )
+
+            ->get();
+
+        $data = [];
+
+        foreach ($rows as $row) {
+
+            $data[$row->localidad_id][$row->tipo] =
+                $row->total;
+        }
+
+        return $data;
+    }
+
+    public function totalGeneralDeduccion($tipo)
+    {
+        return collect($this->deducciones)
+
+            ->sum(function ($tipos) use ($tipo) {
+
+                return $tipos[$tipo] ?? 0;
+            });
+    }
+
+    public function getTotalSemanalDeduccionesProperty()
+    {
+        $data = [];
+
+        foreach ($this->localidades as $localidad) {
+
+            $deducciones =
+                $this->deducciones[$localidad->id]
+                ?? [];
+
+            $manuales =
+                collect($deducciones)->sum();
+
+            $porcentaje =
+                $this->porcentajeDeduccion[$localidad->id]
+                ?? 0;
+
+            $data[$localidad->id] =
+
+                $manuales
+                +
+                $porcentaje;
+        }
+
+        return $data;
+    }
+
+    public function getTotalGeneralDeduccionesProperty()
+    {
+        return collect($this->totalSemanalDeducciones)
+            ->sum();
+    }
+
+    public function getNetoSemanalProperty()
+    {
+        $data = [];
+
+        foreach ($this->localidades as $localidad) {
+
+            $cordobas =
+                $this->totalSemanalCordobas[$localidad->id]
+                ?? 0;
+
+            $deducciones =
+                $this->totalSemanalDeducciones[$localidad->id]
+                ?? 0;
+
+            $data[$localidad->id] =
+
+                $cordobas
+                -
+                $deducciones;
+        }
+
+        return $data;
+    }
+
+    public function getTotalGeneralNetoProperty()
+    {
+        return collect($this->netoSemanal)
             ->sum();
     }
 
