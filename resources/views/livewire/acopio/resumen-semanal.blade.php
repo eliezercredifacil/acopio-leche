@@ -191,11 +191,27 @@
                 <td class="text-center font-bold text-error border border-gray-300">
                     C$ {{ number_format( $this->totalGeneralDeducciones, 0 ) }}
                 </td>
-                
+
                 <td class="text-center font-bold text-success border border-gray-300">
                     C$ {{ number_format( $this->totalGeneralNeto, 0 ) }}
                 </td>
 
+            </tr>
+
+            <tr>
+                <td class="font-bold border border-gray-300">
+                    Total recibido en Acopio
+                </td>
+
+                @foreach ($fechas as $fecha)
+                <td class="font-bold border border-gray-300 text-center">
+                    {{ number_format( $this->totalesDiariosAcopio[$fecha] ?? 0, 0 ) }}
+                </td>
+                @endforeach
+
+                <td class="font-bold border border-gray-300 text-center">
+                    {{ number_format( $this->totalSemanaAcopio, 0 ) }}
+                </td>
             </tr>
 
         </table>

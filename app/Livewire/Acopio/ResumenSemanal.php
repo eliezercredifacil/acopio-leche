@@ -126,42 +126,6 @@ class ResumenSemanal extends Component
         return $data;
     }
 
-    public function getRecibidoAcopioProperty()
-    {
-        $rows = TotalesAcopio::selectRaw('
-            localidad_id,
-            fecha,
-            SUM(litros) as total_litros
-        ')
-
-            ->whereBetween('fecha', [
-                $this->inicioSemana,
-                $this->finSemana
-            ])
-
-            ->where(
-                'tipo_semana',
-                $this->tipoSemana
-            )
-
-            ->groupBy(
-                'localidad_id',
-                'fecha'
-            )
-
-            ->get();
-
-        $data = [];
-
-        foreach ($rows as $row) {
-
-            $data[$row->localidad_id][$row->fecha] =
-                $row->total_litros;
-        }
-
-        return $data;
-    }
-
     public function getLitrosPerdidosProperty()
     {
         $data = [];
@@ -367,6 +331,36 @@ class ResumenSemanal extends Component
     public function getTotalGeneralNetoProperty()
     {
         return collect($this->netoSemanal)
+            ->sum();
+    }
+
+    public function getTotalesDiariosAcopioProperty()
+    {
+        return TotalesAcopio::selectRaw('
+            fecha,
+            SUM(litros) as total_litros
+        ')
+
+            ->whereBetween('fecha', [
+                $this->inicioSemana,
+                $this->finSemana
+            ])
+
+            ->where(
+                'tipo_semana',
+                $this->tipoSemana
+            )
+
+            ->groupBy('fecha')
+
+            ->pluck('total_litros', 'fecha')
+
+            ->toArray();
+    }
+
+    public function getTotalSemanaAcopioProperty()
+    {
+        return collect($this->totalesDiariosAcopio)
             ->sum();
     }
 
