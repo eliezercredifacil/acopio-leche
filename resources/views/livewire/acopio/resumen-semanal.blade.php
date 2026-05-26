@@ -200,7 +200,7 @@
 
             <tr>
                 <td class="font-bold border border-gray-300">
-                    Total recibido en Acopio
+                    Recibido en Acopio
                 </td>
 
                 @foreach ($fechas as $fecha)
@@ -211,6 +211,22 @@
 
                 <td class="font-bold border border-gray-300 text-center">
                     {{ number_format( $this->totalSemanaAcopio, 0 ) }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="font-bold border border-gray-300">
+                    Litros perdidos
+                </td>
+
+                @foreach ($fechas as $fecha)
+                <td class="font-bold border border-gray-300 text-center">
+                    {{ number_format( $this->litrosPerdidos[$fecha] ?? 0, 0 ) }}
+                </td>
+                @endforeach
+
+                <td class="font-bold border border-gray-300 text-center">
+                    {{ number_format( $this->totalSemanaLitrosPerdidos, 0 ) }}
                 </td>
             </tr>
 

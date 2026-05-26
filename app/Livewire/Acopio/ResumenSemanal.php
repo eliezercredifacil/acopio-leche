@@ -126,25 +126,6 @@ class ResumenSemanal extends Component
         return $data;
     }
 
-    public function getLitrosPerdidosProperty()
-    {
-        $data = [];
-
-        foreach ($this->localidades as $localidad) {
-
-            foreach ($this->fechas as $fecha) {
-
-                $campo = $this->recibidoCampo[$localidad->id][$fecha] ?? 0;
-
-                $acopio = $this->recibidoAcopio[$localidad->id][$fecha] ?? 0;
-
-                $data[$localidad->id][$fecha] = $campo - $acopio;
-            }
-        }
-
-        return $data;
-    }
-
     public function getTotalesDiariosCampoProperty()
     {
         return Acopio::selectRaw('
@@ -361,6 +342,28 @@ class ResumenSemanal extends Component
     public function getTotalSemanaAcopioProperty()
     {
         return collect($this->totalesDiariosAcopio)
+            ->sum();
+    }
+
+    public function getLitrosPerdidosProperty()
+    {
+        $data = [];
+
+        foreach ($this->fechas as $fecha) {
+
+            $campo = $this->totalesDiariosCampo[$fecha] ?? 0;
+
+            $acopio = $this->totalesDiariosAcopio[$fecha] ?? 0;
+
+            $data[$fecha] = $campo - $acopio;
+        }
+
+        return $data;
+    }
+
+    public function getTotalSemanaLitrosPerdidosProperty()
+    {
+        return collect($this->litrosPerdidos)
             ->sum();
     }
 
