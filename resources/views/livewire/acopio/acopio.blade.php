@@ -66,7 +66,7 @@
             </div>
 
         </div>
-        
+
     </div>
 
 
@@ -114,7 +114,8 @@
                 $acopio = $this->acopiosMap[$productor->id][$fecha] ?? null;
                 @endphp
 
-                <td class="border border-gray-300 p-0 text-center" wire:key="celda-{{ $productor->id }}-{{ $fecha }}-{{ $tipoSemana }}"
+                <td class="border border-gray-300 p-0 text-center bg-slate-700 text-white dark:bg-slate-800"
+                    wire:key="celda-{{ $productor->id }}-{{ $fecha }}-{{ $tipoSemana }}"
                     title="Precio del dia: C$ {{ number_format($acopio?->precio ?? 0, 2) }}">
 
                     <div x-data="{ editing: false, litros: '{{ $acopio ? (int) $acopio->litros : '' }}' }" class="w-full h-full">
@@ -123,7 +124,7 @@
                         <div
                             x-show="!editing"
                             @click="editing = true; $nextTick(() => { $refs.litros.focus(); $refs.litros.select(); });"
-                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200">
+                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white">
                             <span x-text="litros || '' "></span>
                         </div>
 
@@ -132,7 +133,7 @@
                             @keydown.enter="editing = false; $wire.guardar( '{{ $productor->id }}', '{{ $fecha }}', '{{ $productor->precio_litro }}', litros )"
                             @blur="editing = false; $wire.guardar( '{{ $productor->id }}', '{{ $fecha }}', '{{ $productor->precio_litro }}', litros )"
                             type="number"
-                            class="w-full h-8 text-center border-none focus:outline-none bg-base-100" />
+                            class="w-full h-8 text-center border-none focus:outline-none bg-base-100 text-black dark:text-white" />
 
                     </div>
                 </td>
@@ -265,13 +266,14 @@
                 @foreach ($fechas as $fecha)
                 @php $acopio = $this->acopioTotalesMap[$fecha] ?? null; @endphp
 
-                <td wire:key="acopio-total-{{ $localidadId }}-{{ $tipoSemana }}-{{ $fecha }}" class="border border-gray-300 p-0 text-center align-middle">
+                <td class="border border-gray-300 p-0 text-center align-middle bg-slate-700 text-white dark:bg-slate-800"
+                    wire:key="acopio-total-{{ $localidadId }}-{{ $tipoSemana }}-{{ $fecha }}">
 
                     <div x-data="{ editing: false, litros: '{{ $acopio ? (int) $acopio->litros : '' }}' }" class="w-full h-full">
 
                         {{-- TEXTO --}}
                         <div x-show="!editing" @click="editing = true; $nextTick(() => { $refs.inputLitros.focus(); $refs.inputLitros.select(); });"
-                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200">
+                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white">
                             <span x-text="litros || ''"></span>
                         </div>
 
@@ -279,7 +281,7 @@
                         <input x-show="editing" x-ref="inputLitros" x-model="litros"
                             @keydown.enter.prevent=" editing = false; $wire.guardarAcopioTotal('{{ $fecha }}', litros);"
                             @blur="if(editing){ editing = false; $wire.guardarAcopioTotal('{{ $fecha }}', litros);}"
-                            type="number" class="w-full p-0 text-center border-none focus:outline-none bg-base-100" />
+                            type="number" class="w-full p-0 text-center border-none focus:outline-none bg-base-100 text-black dark:text-white" />
 
                     </div>
 

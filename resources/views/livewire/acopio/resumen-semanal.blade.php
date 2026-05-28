@@ -52,22 +52,22 @@
         <table class="table min-w-full border-collapse">
 
             <tr>
-                <th class="bg-cyan-800 text-white border border-gray-300">COMARCAS</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 whitespace-nowrap">COMARCAS</th>
                 @foreach ($fechas as $fecha)
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center">
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">
                     {{ \Carbon\Carbon::parse($fecha)->locale('es')->translatedFormat('D d') }}
                 </th>
                 @endforeach
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total entregados</th>
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total cordobas</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">% Deducción</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">Efectivo</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">Combustible</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">Alimentos</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">Lácteos</th>
-                <th class="bg-red-800 text-white border border-gray-300 text-center">Otros</th>
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Total Deducciones</th>
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center">Neto a recibir</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">Total entregados</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">Total cordobas</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">% Deducción</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">Efectivo</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">Combustible</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">Alimentos</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">Lácteos</th>
+                <th class="bg-red-800 text-white border border-gray-300 text-center whitespace-nowrap">Otros</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">Total Deducciones</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">Neto a recibir</th>
             </tr>
 
             @foreach ($this->localidades as $localidad)
@@ -229,6 +229,27 @@
                     {{ number_format( $this->totalSemanaLitrosPerdidos, 0 ) }}
                 </td>
             </tr>
+
+            <tr>
+                <td class="font-bold border border-gray-300">
+                    % Perdidos
+                </td>
+
+                @foreach ($fechas as $fecha)
+
+                <td class="text-center border border-gray-300">
+                    {{ number_format( $this->porcentajeLitrosPerdidos[$fecha] ?? 0, 2 ) }}%
+                </td>
+
+                @endforeach
+
+                <td class="text-center border border-gray-300">
+                    {{ number_format( $this->totalSemanaPorcentajePerdido, 2 ) }}%
+                </td>
+
+
+            </tr>
+
 
         </table>
 

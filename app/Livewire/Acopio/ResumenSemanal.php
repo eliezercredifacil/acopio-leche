@@ -258,22 +258,13 @@ class ResumenSemanal extends Component
 
         foreach ($this->localidades as $localidad) {
 
-            $deducciones =
-                $this->deducciones[$localidad->id]
-                ?? [];
+            $deducciones = $this->deducciones[$localidad->id] ?? [];
 
-            $manuales =
-                collect($deducciones)->sum();
+            $manuales = collect($deducciones)->sum();
 
-            $porcentaje =
-                $this->porcentajeDeduccion[$localidad->id]
-                ?? 0;
+            $porcentaje = $this->porcentajeDeduccion[$localidad->id] ?? 0;
 
-            $data[$localidad->id] =
-
-                $manuales
-                +
-                $porcentaje;
+            $data[$localidad->id] = $manuales + $porcentaje;
         }
 
         return $data;
@@ -291,19 +282,11 @@ class ResumenSemanal extends Component
 
         foreach ($this->localidades as $localidad) {
 
-            $cordobas =
-                $this->totalSemanalCordobas[$localidad->id]
-                ?? 0;
+            $cordobas = $this->totalSemanalCordobas[$localidad->id] ?? 0;
 
-            $deducciones =
-                $this->totalSemanalDeducciones[$localidad->id]
-                ?? 0;
+            $deducciones = $this->totalSemanalDeducciones[$localidad->id] ?? 0;
 
-            $data[$localidad->id] =
-
-                $cordobas
-                -
-                $deducciones;
+            $data[$localidad->id] = $cordobas - $deducciones;
         }
 
         return $data;
@@ -365,6 +348,31 @@ class ResumenSemanal extends Component
     {
         return collect($this->litrosPerdidos)
             ->sum();
+    }
+
+    public function getPorcentajeLitrosPerdidosProperty()
+    {
+        $data = [];
+
+        foreach ($this->fechas as $fecha) {
+
+            $campo = $this->totalesDiariosCampo[$fecha] ?? 0;
+
+            $perdidos = $this->litrosPerdidos[$fecha] ?? 0;
+
+            $data[$fecha] = $campo > 0 ? ($perdidos / $campo) * 100 : 0;
+        }
+
+        return $data;
+    }
+
+    public function getTotalSemanaPorcentajePerdidoProperty()
+    {
+        $campo = $this->totalSemanaCampo;
+
+        $perdidos = $this->totalSemanaLitrosPerdidos;
+
+        return $campo > 0 ? ($perdidos / $campo) * 100 : 0;
     }
 
     public function render()
