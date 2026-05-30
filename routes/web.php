@@ -22,6 +22,8 @@ Route::get('/productor-editar/{productor}', [ProductorController::class, 'edit']
 
 Route::get('/acopio', [AcopioController::class, 'index'])->name('acopio')->middleware('auth');
 Route::get('/acopio/resumen-semanal', [AcopioController::class, 'resumenSemanal'])->name('acopio.resumen-semanal')->middleware('auth');
+Route::get('/acopio/recibos', [AcopioController::class, 'recibos'])->name('acopio.recibos')->middleware('auth');
+
 
 Route::view('profile', 'profile')->middleware(['auth'])->name('profile');
 

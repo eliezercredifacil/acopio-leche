@@ -69,6 +69,32 @@ class ResumenSemanal extends Component
         }
     }
 
+    public function getTituloSemanaProperty()
+    {
+        Carbon::setLocale('es');
+
+        $inicio = Carbon::parse($this->inicioSemana);
+        $fin = Carbon::parse($this->finSemana);
+
+        if ($inicio->month === $fin->month) {
+
+            return sprintf(
+                'Semana del %s al %s de %s',
+                $inicio->format('d'),
+                $fin->format('d'),
+                $fin->translatedFormat('F')
+            );
+        }
+
+        return sprintf(
+            'Semana del %s de %s al %s de %s',
+            $inicio->format('d'),
+            $inicio->translatedFormat('F'),
+            $fin->format('d'),
+            $fin->translatedFormat('F')
+        );
+    }
+
     public function getRecibidoCampoProperty()
     {
         $rows = Acopio::selectRaw('localidad_id,fecha,SUM(litros) as total_litros')

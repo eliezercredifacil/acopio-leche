@@ -47,6 +47,13 @@
 
     </div>
 
+    <!-- Rotulo de la semana -->
+    <div class="flex gap-2 mb-2">
+        <h2 class="card-title font-bold">{{ $this->tituloSemana }}
+            <i class="fa-solid fa-circle-check text-green-600"></i>
+        </h2>
+    </div>
+
     <div class="overflow-x-auto">
 
         <table class="table min-w-full border-collapse">

@@ -23,6 +23,11 @@ class AcopioController extends Controller
         return view('acopio.resumen-semanal');
     }
 
+    public function recibos()
+    {
+        return view('acopio.receipts');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -62,4 +67,6 @@ class AcopioController extends Controller
     {
         //
     }
+
+
 }

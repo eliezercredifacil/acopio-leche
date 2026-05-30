@@ -11,8 +11,8 @@
         Resumen semanal
     </a>
 
-    <a href="{{ route('acopio') }}" role="tab"
-        class="tab border-2 border-solid {{ request()->routeIs('acopio0') ? 'bg-sky-800 font-bold text-white' : '' }}">
+    <a href="{{ route('acopio.recibos') }}" role="tab"
+        class="tab border-2 border-solid {{ request()->routeIs('acopio.recibos') ? 'bg-sky-800 font-bold text-white' : '' }}">
         <i class="fa-solid fa-file-invoice-dollar px-1"></i>
         Recibos
     </a>

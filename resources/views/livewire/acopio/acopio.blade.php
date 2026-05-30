@@ -69,6 +69,12 @@
 
     </div>
 
+    <!-- Rotulo de la semana -->
+    <div class="flex gap-2 mb-2">
+        <h2 class="card-title font-bold">{{ $this->tituloSemana }}
+            <i class="fa-solid fa-circle-check text-green-600"></i>
+        </h2>
+    </div>
 
     <!-- Tabla de acopios -->
     <div class="overflow-x-auto">
@@ -296,12 +302,13 @@
             </tr>
 
             <tr>
+
                 <td class="bg-gray-600 text-white sticky left-0 z-10 border border-gray-300 whitespace-nowrap font-bold">
                     Litros perdidos <i class="fa-solid fa-circle-minus"></i>
                 </td>
 
                 @foreach ($fechas as $fecha)
-                <td class="border border-gray-300 text-center font-bold {{ ($this->litrosPerdidos[$fecha] ?? 0) > 0 ? 'text-error font-bold' : 'text-success' }}">
+                <td class="border border-gray-300 text-center font-bold {{ ($this->litrosPerdidos[$fecha] ?? 0) > 0 ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/30' : 'text-success' }}">
                     {{ number_format($this->litrosPerdidos[$fecha] ?? 0, 0) }}
                 </td>
                 @endforeach
@@ -320,14 +327,14 @@
 
                 @foreach ($fechas as $fecha)
 
-                <td class="border border-gray-300 text-center {{ ($this->porcentajeLitrosPerdidos[$fecha] ?? 0) > 0 ? 'text-warning' : 'text-success' }}">
+                <td class="border border-gray-300 text-center font-bold {{ ($this->porcentajeLitrosPerdidos[$fecha] ?? 0) > 0 ? 'text-warning' : 'text-success' }}">
                     {{ number_format($this->porcentajeLitrosPerdidos[$fecha] ?? 0, 2) }}%
                 </td>
 
                 @endforeach
 
                 {{-- TOTAL --}}
-                <td class="border border-gray-300 text-center font-bold text-warning">
+                <td class="border border-gray-300 text-center font-bold">
                     {{ number_format( $this->totalPorcentajeLitrosPerdidos, 2 ) }}%
                 </td>
 
