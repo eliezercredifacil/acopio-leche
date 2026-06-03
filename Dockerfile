@@ -7,7 +7,8 @@ RUN install-php-extensions \
     bcmath \
     intl \
     zip \
-    opcache
+    opcache \
+    pcntl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -24,4 +25,4 @@ RUN php artisan view:cache || true
 
 EXPOSE 8080
 
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8080"]
+CMD ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=8000"]
