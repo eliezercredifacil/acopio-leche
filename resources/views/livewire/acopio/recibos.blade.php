@@ -66,9 +66,8 @@
                 <span class="loading loading-spinner loading-md"></span>
             </div>
 
-            <a href="{{ route('recibos.print-all', ['localidad' => $localidadId,'inicio' => $inicioSemana,'fin' => $finSemana,'tipo' => $tipoSemana,]) }}"
-                target="_blank"
-                class="btn btn-sm">
+            <a role="button" href="{{ route('recibos.print-all', ['localidad' => $localidadId,'inicio' => $inicioSemana,'fin' => $finSemana,'tipo' => $tipoSemana,]) }}" target="_blank"
+                class="btn btn-sm dark:bg-amber-700 dark:text-white bg-gray-200 text-black">
                 <i class="fa-solid fa-print"></i>
                 Imprimir todos los recibos
             </a>
