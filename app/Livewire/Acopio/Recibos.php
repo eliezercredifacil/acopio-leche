@@ -27,6 +27,8 @@ class Recibos extends Component
 
     public $localidades;
 
+    protected $queryString = ['localidadId', 'tipoSemana', 'fechaReporte'];
+
     public function mount()
     {
         $this->localidades = Localidad::orderBy('nombre')->get();
@@ -113,6 +115,7 @@ class Recibos extends Component
     public function render()
     {
         $productores = Productor::with([
+
             'acopios' => function ($q) {
 
                 $q->whereBetween('fecha', [
@@ -126,7 +129,16 @@ class Recibos extends Component
                     )
 
                     ->orderBy('fecha');
+            },
+
+            'deductions' => function ($q) {
+
+                $q->where(
+                    'semana_inicio',
+                    $this->inicioSemana
+                );
             }
+
         ])
 
             ->where('activo', true)
@@ -143,7 +155,7 @@ class Recibos extends Component
 
             ->orderBy('nombre')
 
-            ->paginate(10);
+            ->paginate(10);        
 
         return view('livewire.acopio.recibos', compact('productores'));
     }

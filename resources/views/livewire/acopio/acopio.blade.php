@@ -43,7 +43,7 @@
                 class="px-4 py-2 rounded btn btn-sm {{ $tipoSemana === 'A' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
 
                 @if($tipoSemana == 'A')
-                <i class="fa-solid fa-caret-right mr-1"></i>
+                <i class="fa-solid fa-caret-right"></i>
                 @endif
 
                 Domingo a Sábado
@@ -51,10 +51,10 @@
 
             <button
                 wire:click="$set('tipoSemana', 'B')"
-                class="px-4 py-2 rounded btn btn-sm {{ $tipoSemana === 'B' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
+                class="btn btn-sm px-2 py-2 rounded {{ $tipoSemana === 'B' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
 
                 @if($tipoSemana == 'B')
-                <i class="fa-solid fa-caret-right mr-1"></i>
+                <i class="fa-solid fa-caret-right"></i>
                 @endif
 
                 Viernes a Jueves

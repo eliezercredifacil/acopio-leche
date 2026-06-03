@@ -43,4 +43,27 @@ class Productor extends Model
     {
         return $this->hasMany(Deduction::class);
     }
+
+    // 👇 Accessor
+    public function getTotalesReciboAttribute()
+    {
+        $cordobas = $this->acopios->sum('total');
+
+        $porcentaje = $cordobas * 0.013;
+
+        $otras = $this->deductions->sum('monto');
+
+        return [
+
+            'litros' => $this->acopios->sum('litros'),
+
+            'cordobas' => $cordobas,
+
+            'porcentaje_deduccion' => $porcentaje,
+
+            'otras_deducciones' => $otras,
+
+            'neto' => $cordobas - $porcentaje - $otras,
+        ];
+    }
 }

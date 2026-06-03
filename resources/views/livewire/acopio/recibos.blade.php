@@ -2,7 +2,7 @@
     {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
 
     <div class="mb-3 relative max-w-sm">
-        <input type="date" class="input bg-base-100" wire:model.lazy="fechaReporte" />
+        <input type="date" class="input bg-base-100 w-1/2" wire:model.lazy="fechaReporte" />
 
         {{-- Spinner global --}}
         <div wire:loading.delay wire:target="fechaReporte">
@@ -66,6 +66,13 @@
                 <span class="loading loading-spinner loading-md"></span>
             </div>
 
+            <a href="{{ route('recibos.print-all', ['localidad' => $localidadId,'inicio' => $inicioSemana,'fin' => $finSemana,'tipo' => $tipoSemana,]) }}"
+                target="_blank"
+                class="btn btn-sm">
+                <i class="fa-solid fa-print"></i>
+                Imprimir todos los recibos
+            </a>
+
         </div>
     </div>
 
@@ -105,7 +112,7 @@
                         <tr class="bg-green-700 text-white">
                             <th class="border border-gray-300">Día</th>
                             <th class="border border-gray-300">Litros</th>
-                            <th class="border border-gray-300">Total<br> Córdobas</th>
+                            <th class="border border-gray-300">Córdobas</th>
                         </tr>
 
                     </thead>
@@ -136,30 +143,67 @@
 
                     <tfoot>
 
-                        <tr>
+                        <tr class="{{ $loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-800' }}">
 
                             <th class="border border-gray-300 text-left">Totales</th>
 
                             <th class="border border-gray-300 text-center">
-                                {{ number_format($productor->acopios->sum('litros'), 0) }}
+                                {{ number_format($productor->totales_recibo['litros'], 0) }}
                             </th>
 
                             <th class="border border-gray-300 text-right">
-                                C$ {{ number_format($productor->acopios->sum('total'), 0) }}
+                                C$ {{ number_format($productor->totales_recibo['cordobas'], 0) }}
                             </th>
 
+                        </tr>
+
+                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                            <th colspan="2">% Deducción por compra</th>
+
+                            <th class="border border-gray-300 text-right">
+                                C$ {{ number_format( $productor->totales_recibo['porcentaje_deduccion'], 0 ) }}
+                            </th>
+                        </tr>
+
+                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                            <th colspan="2" class="border border-gray-300">Anticipos / Adelantos</th>
+
+                            <th class="border border-gray-300 text-right">
+                                C$ {{ number_format( $productor->totales_recibo['otras_deducciones'], 0 ) }}
+                            </th>
+                        </tr>
+
+                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                            <th colspan="2" class="border border-gray-300">Neto a recibir</th>
+
+                            <th class="border border-gray-300 text-right">
+                                C$ {{ number_format( $productor->totales_recibo['neto'], 0 ) }}
+                            </th>
                         </tr>
 
                     </tfoot>
 
                 </table>
 
+                <div class="mt-2">
+
+                    <a role="button" href="{{ route('recibos.print',['productor' => $productor->id,'inicio' => $inicioSemana,'fin' => $finSemana,'tipo' => $tipoSemana,]) }}" target="_blank"
+                        class="btn btn-xs btn-outline text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
+                        <i class="fa-solid fa-print"></i>
+                        Imprimir recibo
+                    </a>
+
+                </div>
+
             </div>
 
         </div>
 
+
+
         @endforeach
     </div>
+
 
     <div class="mt-6">
         {{ $productores->links() }}

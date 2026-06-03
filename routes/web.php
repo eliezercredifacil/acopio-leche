@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocalidadController;
 use App\Http\Controllers\ProductorController;
 use App\Http\Controllers\AcopioController;
+use App\Http\Controllers\ReciboController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -23,6 +24,9 @@ Route::get('/productor-editar/{productor}', [ProductorController::class, 'edit']
 Route::get('/acopio', [AcopioController::class, 'index'])->name('acopio')->middleware('auth');
 Route::get('/acopio/resumen-semanal', [AcopioController::class, 'resumenSemanal'])->name('acopio.resumen-semanal')->middleware('auth');
 Route::get('/acopio/recibos', [AcopioController::class, 'recibos'])->name('acopio.recibos')->middleware('auth');
+Route::get('/recibos/{productor}/print', [ReciboController::class, 'print'])->name('recibos.print');
+Route::get('/recibos/print-all', [ReciboController::class, 'printAll'])->name('recibos.print-all');
+
 
 
 Route::view('profile', 'profile')->middleware(['auth'])->name('profile');
