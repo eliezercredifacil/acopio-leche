@@ -19,10 +19,10 @@ RUN composer install \
     --optimize-autoloader \
     --no-interaction
 
-RUN php artisan config:cache || true
-RUN php artisan route:cache || true
-RUN php artisan view:cache || true
+RUN apt-get update && apt-get install -y npm
+RUN npm install
+RUN npm run build
 
 EXPOSE 8080
 
-CMD ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8080"]
