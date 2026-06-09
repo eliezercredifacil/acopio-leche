@@ -150,8 +150,31 @@
                     {{ $this->resumen[$productor->id]['litros'] ?? 0 }}
                 </td>
 
-                <td class="border border-gray-300 text-sm text-center font-semibold">
-                    C$ {{ $this->resumen[$productor->id]['precio'] ?? 0 }}
+                <td class="border border-gray-300 p-0 text-center bg-slate-700 text-white dark:bg-slate-800"
+                    wire:key="celda-{{ $productor->id }}-{{ $fecha }}-{{ $tipoSemana }}">                    
+
+                    <div x-data="{ editing: false, precio_litro: '{{ $productor->precio_litro ?? '' }}' }" class="w-full h-full">
+
+                        {{-- TEXTO --}}
+                        <div
+                            class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 rounded"
+                            x-show="!editing"
+                            @click="editing = true; $nextTick(() => { $refs.inputPrecioLitro.focus(); $refs.inputPrecioLitro.select(); });">
+                            <span x-text="precio_litro || '-'"></span>
+                        </div>
+
+                        {{-- INPUT --}}
+                        <input
+                            type="number"
+                            x-show="editing"
+                            x-ref="inputPrecioLitro"
+                            x-model="precio_litro"
+                            @keydown.enter.prevent="$refs.inputPrecioLitro.blur()"
+                            @blur="editing = false; $wire.actualizarPrecio({{ $productor->id }},precio_litro)"
+                            class="w-full h-8 text-center border-none focus:outline-none bg-base-100" />
+
+                    </div>
+
                 </td>
 
                 <td class="border border-gray-300 text-sm text-center font-semibold">

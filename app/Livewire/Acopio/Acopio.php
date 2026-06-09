@@ -467,6 +467,21 @@ class Acopio extends Component
         cache()->forget($this->cacheKey());
     }
 
+    public function actualizarPrecio($productorId, $precio)
+    {
+        $precio = (float) $precio;
+
+        if ($precio < 0) {
+            return;
+        }
+
+        Productor::where('id', $productorId)
+            ->update([
+                'precio_litro' => $precio
+            ]);
+
+        cache()->forget($this->cacheKey());
+    }
 
     public function render()
     {

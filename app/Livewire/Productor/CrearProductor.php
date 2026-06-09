@@ -13,6 +13,7 @@ class CrearProductor extends Component
     public $cedula;
     public $telefono;
     public $semana;
+    public $precio_litro;
     public $localidad_id;
     public $direccion;
     public $localidades = [];
@@ -29,7 +30,8 @@ class CrearProductor extends Component
         'telefono' => 'required|numeric|min:8',
         'localidad_id' => 'required',
         'direccion' => 'required|string|min:5',
-        'semana' => 'required'
+        'semana' => 'required',
+        'precio_litro' => 'required|numeric|min:0'
     ];
 
     public function AgregarProductor()
@@ -43,6 +45,7 @@ class CrearProductor extends Component
         $productor->telefono = $this->telefono;
         $productor->direccion = $this->direccion;
         $productor->semana = $this->semana;
+        $productor->precio_litro = $this->precio_litro;
         $productor->save();
         
         session()->flash('status', 'Productor creado correctamente.');

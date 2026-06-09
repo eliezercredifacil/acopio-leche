@@ -15,6 +15,7 @@ class EditarProductor extends Component
     public $telefono;
     public $localidad_id;
     public $semana;
+    public $precio_litro;
     public $direccion;
     public $localidades;
     public $productor;
@@ -28,6 +29,7 @@ class EditarProductor extends Component
         $this->telefono = $this->productor->telefono;
         $this->localidad_id = $this->productor->localidad_id;
         $this->semana = $this->productor->semana;
+        $this->precio_litro = fmod($this->productor->precio_litro, 1) == 0 ? (int) $this->productor->precio_litro: $this->productor->precio_litro;
         $this->direccion = $this->productor->direccion;
     }
 
@@ -39,6 +41,7 @@ class EditarProductor extends Component
             'telefono' => ['required', 'string'],
             'localidad_id' => ['required'],
             'semana' => ['required'],
+            'precio_litro' => ['required', 'numeric', 'min:0'],
             'direccion' => ['required'],
         ]);
 
@@ -48,6 +51,7 @@ class EditarProductor extends Component
         $this->productor->telefono = $this->telefono;
         $this->productor->localidad_id = $this->localidad_id;
         $this->productor->semana = $this->semana;
+        $this->productor->precio_litro = $this->precio_litro;
         $this->productor->direccion = $this->direccion;
 
         // 🔹 Verificar ANTES de guardar

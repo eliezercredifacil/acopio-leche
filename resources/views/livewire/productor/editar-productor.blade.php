@@ -20,6 +20,14 @@
                 </div>
 
                 <div>
+                    <label class="label">Precio litro</label>
+                    <input type="number" class="input bg-base-100" placeholder="Precio litro" wire:model="precio_litro" step="0.01" />
+                    @error('precio_litro')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div>
                     <label class="label">Cédula</label>
                     <input type="text" class="input bg-base-100" placeholder="Cédula" wire:model="cedula" />
                     @error('cedula')
