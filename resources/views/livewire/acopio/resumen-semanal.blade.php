@@ -59,9 +59,9 @@
         <table class="table min-w-full border-collapse">
 
             <tr>
-                <th class="bg-cyan-800 text-white border border-gray-300 whitespace-nowrap">COMARCAS</th>
+                <th class="bg-cyan-800 text-white border border-gray-300 w-auto whitespace-nowrap">COMARCAS</th>
                 @foreach ($fechas as $fecha)
-                <th class="bg-cyan-800 text-white border border-gray-300 text-center whitespace-nowrap">
+                <th class="bg-cyan-800 text-white border border-gray-300 text-center w-auto whitespace-nowrap">
                     {{ \Carbon\Carbon::parse($fecha)->locale('es')->translatedFormat('D d') }}
                 </th>
                 @endforeach
@@ -82,7 +82,7 @@
             <tr>
 
                 {{-- LOCALIDAD --}}
-                <td class="bg-green-800 text-white border border-gray-300 font-bold uppercase">
+                <td class="bg-green-800 text-white border border-gray-300 font-bold uppercase whitespace-nowrap">
 
                     {{ $localidad->nombre }}
 
