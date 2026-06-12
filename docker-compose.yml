@@ -23,9 +23,7 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     env_file:
-      - .env
-    volumes:
-      - .:/app
+      - .env    
     depends_on:
       - mysql
     networks:
