@@ -198,7 +198,7 @@
                     </td>
 
                     <td class="border border-gray-300 text-sm text-center font-semibold">
-                        C$ {{ number_format($this->resumen[$productor->id]['porcentaje_compra']) ?? 0 }}
+                        C$ {{ number_format($this->resumen[$productor->id]['porcentaje_compra'], 2) ?? '' }}
                     </td>
 
                     @foreach ($tipos as $tipo)
@@ -261,7 +261,7 @@
 
                 {{-- % DEDUCCIÓN --}}
                 <td class="border border-gray-300 text-center">
-                    C$ {{ number_format($this->totalesGenerales['porcentaje_compra'], 0) }}
+                    C$ {{ number_format($this->totalesGenerales['porcentaje_compra'], 2) }}
                 </td>
 
                 {{-- EFECTIVO --}}
