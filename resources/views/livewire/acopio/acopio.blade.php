@@ -152,16 +152,16 @@
 
                                 {{-- MODO TEXTO --}}
                                 <div x-show="!editing"
-                                    @click="editing = true; $nextTick(() => { $refs.litros.focus(); $refs.litros.select(); });"
-                                    class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white">
+                                    class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white"
+                                    @click="editing = true; $nextTick(() => { $refs.litros.focus(); $refs.litros.select(); });">
                                     <span x-text="litros || '' "></span>
                                 </div>
 
                                 {{-- MODO INPUT --}}
                                 <input type="number" x-show="editing" x-ref="litros" x-model="litros"
+                                    class="w-full h-8 text-center border-none focus:outline-none bg-base-100 text-black dark:text-white"
                                     @keydown.enter="editing = false;$wire.guardar({{ $productor->id }},'{{ $fecha }}',{{ $productor->precio_litro }}, litros)"
-                                    @blur="editing = false; $wire.guardar({{ $productor->id }},'{{ $fecha }}',{{ $productor->precio_litro }}, litros)"
-                                    class="w-full h-8 text-center border-none focus:outline-none bg-base-100 text-black dark:text-white" />
+                                    @blur="editing = false; $wire.guardar({{ $productor->id }},'{{ $fecha }}',{{ $productor->precio_litro }}, litros) " />
 
                             </div>
                         </td>
@@ -177,38 +177,39 @@
                         <div x-data="{ editing: false, precio_litro: '{{ $productor->precio_litro ?? '' }}' }" class="w-full h-full">
 
                             {{-- TEXTO --}}
-                            <div class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 rounded"
-                                x-show="!editing"
+                            <div x-show="!editing"
+                                class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white"
                                 @click="editing = true; $nextTick(() => { $refs.inputPrecioLitro.focus(); $refs.inputPrecioLitro.select(); });">
                                 <span x-text="precio_litro || '-'"></span>
                             </div>
 
                             {{-- INPUT --}}
                             <input type="number" x-show="editing" x-ref="inputPrecioLitro" x-model="precio_litro"
+                                class="w-full h-8 text-center border-none focus:outline-none bg-base-100 text-black dark:text-white"
                                 @keydown.enter.prevent="$refs.inputPrecioLitro.blur()"
-                                @blur="editing = false; $wire.actualizarPrecio({{ $productor->id }},precio_litro)"
-                                class="w-full h-8 text-center border-none focus:outline-none bg-base-100" />
+                                @blur="editing = false; $wire.actualizarPrecio({{ $productor->id }},precio_litro)" />
 
                         </div>
 
                     </td>
 
-                    <td class="border border-gray-300 text-sm text-center font-semibold">
-                        C$ {{ number_format($this->resumen[$productor->id]['cordobas']) ?? 0 }}
+                    <td class="border border-gray-300 text-sm text-center font-bold">
+                        C$ {{ number_format($this->resumen[$productor->id]['cordobas'], 2) ?? 0 }}
                     </td>
 
-                    <td class="border border-gray-300 text-sm text-center font-semibold">
+                    <td class="border border-gray-300 text-sm text-center font-bold">
                         C$ {{ number_format($this->resumen[$productor->id]['porcentaje_compra'], 2) ?? '' }}
                     </td>
 
                     @foreach ($tipos as $tipo)
-                        <td class="border border-gray-300 text-center p-0"
+
+                        <td class="border border-gray-300 p-0 text-center align-middle bg-slate-700 text-white dark:bg-slate-800"
                             wire:key="deduction-{{ $tipo }}-{{ $productor->id }}-{{ $inicioSemana }}">
 
                             <div x-data="{ editing: false, monto: '{{ $this->resumen[$productor->id][$tipo] ?? '' }}' }" class="w-full h-full">
 
                                 {{-- TEXTO --}}
-                                <div class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200"
+                                <div class="cursor-pointer h-8 flex items-center justify-center hover:bg-base-200 hover:text-black dark:hover:text-white"
                                     x-show="!editing"
                                     @click="editing = true; $nextTick(() => { $refs.inputMonto.focus(); $refs.inputMonto.select(); });">
                                     <span x-text="monto || '-'"></span>
@@ -216,24 +217,23 @@
 
                                 {{-- INPUT --}}
                                 <input type="number" x-show="editing" x-ref="inputMonto" x-model="monto"
-                                    @keydown.enter="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}',monto)"
-                                    @blur="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}',monto)"
-                                    class="w-full h-8 text-center border-none focus:outline-none bg-base-100" />
+                                    class="w-full h-8 text-center border-none focus:outline-none bg-base-100"
+                                    @keydown.enter="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}', monto)"
+                                    @blur="editing = false; $wire.guardarDeduccion('{{ $productor->id }}','{{ $tipo }}', monto)" />
 
                             </div>
                         </td>
+
                     @endforeach
 
-                    <td class="border border-gray-300 text-sm text-center text-error font-semibold">
-                        C$ {{ number_format($this->resumen[$productor->id]['deducciones']) ?? 0 }}
+                    <td class="border border-gray-300 text-sm text-center text-error font-bold">
+                        C$ {{ number_format($this->resumen[$productor->id]['deducciones'], 2) ?? '' }}
                     </td>
-                    <td class="border border-gray-300 text-sm text-center font-semibold">
-                        C$ {{ number_format($this->resumen[$productor->id]['neto']) ?? 0 }}
+                    <td class="border border-gray-300 text-sm text-center font-bold">
+                        C$ {{ number_format($this->resumen[$productor->id]['neto'], 2) ?? 0 }}
                     </td>
                 </tr>
             @endforeach
-
-
 
             <tr>
 
@@ -248,55 +248,56 @@
                     </td>
                 @endforeach
 
-                <td class="border border-gray-300 text-center">
+                <td class="border border-gray-300 text-center font-bold">
                     {{ number_format($this->totalesGenerales['litros'], 0) }}
                 </td>
 
-                <td class="border border-gray-300 text-center">-</td>
+                <td class="border border-gray-300 text-center"></td>
 
                 {{-- TOTAL CÓRDOBAS --}}
-                <td class="border border-gray-300 text-center">
-                    C$ {{ number_format($this->totalesGenerales['cordobas'], 0) }}
+                <td class="border border-gray-300 text-center font-bold">
+                    C$ {{ number_format($this->totalesGenerales['cordobas'], 2) }}
                 </td>
 
                 {{-- % DEDUCCIÓN --}}
-                <td class="border border-gray-300 text-center">
+                <td class="border border-gray-300 text-center font-bold">
                     C$ {{ number_format($this->totalesGenerales['porcentaje_compra'], 2) }}
                 </td>
 
                 {{-- EFECTIVO --}}
-                <td class="border border-gray-300 text-center whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['efectivo'], 0) }}
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['efectivo'], 2) }}
                 </td>
 
                 {{-- COMBUSTIBLE --}}
-                <td class="border border-gray-300 text-center whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['combustible'], 0) }}
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['combustible'], 2) }}
                 </td>
 
                 {{-- ALIMENTOS --}}
-                <td class="border border-gray-300 text-center whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['alimentos'], 0) }}
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['alimentos'], 2) }}
                 </td>
 
                 {{-- LACTEOS --}}
-                <td class="border border-gray-300 text-center whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['lacteos'], 0) }}
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['lacteos'], 2) }}
                 </td>
 
                 {{-- OTROS --}}
-                <td class="border border-gray-300 text-center whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['otros'], 0) }}
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['otros'], 2) }}
                 </td>
 
                 {{-- TOTAL DEDUCCIONES --}}
-                <td class="border border-gray-300 text-center text-error whitespace-nowrap">
-                    C$ {{ number_format($this->totalesGenerales['deducciones'], 0) }}
+                <td class="border border-gray-300 text-center text-red-600 dark:text-error whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['deducciones'], 2) }}
                 </td>
 
                 {{-- NETO --}}
-                <td class="border border-gray-300 text-center text-success whitespace-nowrap font-bold">
-                    C$ {{ number_format($this->totalesGenerales['neto'], 0) }}
+                <td
+                    class="border border-gray-300 text-center text-green-700 dark:text-success whitespace-nowrap font-bold">
+                    C$ {{ number_format($this->totalesGenerales['neto'], 2) }}
                 </td>
 
             </tr>
@@ -335,7 +336,7 @@
                     </td>
                 @endforeach
 
-                <td class="border border-gray-300 text-center text-success whitespace-nowrap font-bold">
+                <td class="border border-gray-300 text-center whitespace-nowrap font-bold">
                     {{ number_format($this->totalAcopioSemana, 0) }}
                 </td>
 
@@ -350,7 +351,7 @@
 
                 @foreach ($fechas as $fecha)
                     <td
-                        class="border border-gray-300 text-center font-bold {{ ($this->litrosPerdidos[$fecha] ?? 0) > 0 ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/30' : 'text-success' }}">
+                        class="border border-gray-300 text-center font-bold {{ ($this->litrosPerdidos[$fecha] ?? 0) > 0 ? 'text-white bg-red-600 dark:bg-red-500' : 'text-white bg-green-600 dark:bg-green-700' }}">
                         {{ number_format($this->litrosPerdidos[$fecha] ?? 0, 0) }}
                     </td>
                 @endforeach
@@ -370,7 +371,7 @@
 
                 @foreach ($fechas as $fecha)
                     <td
-                        class="border border-gray-300 text-center font-bold {{ ($this->porcentajeLitrosPerdidos[$fecha] ?? 0) > 0 ? 'text-warning' : 'text-success' }}">
+                        class="border border-gray-300 text-center font-bold {{ ($this->porcentajeLitrosPerdidos[$fecha] ?? 0) > 0 ? 'text-white bg-amber-600' : 'text-white bg-green-600 dark:bg-green-700' }}">
                         {{ number_format($this->porcentajeLitrosPerdidos[$fecha] ?? 0, 2) }}%
                     </td>
                 @endforeach

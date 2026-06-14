@@ -480,20 +480,22 @@ class Acopio extends Component
                 'precio_litro' => $precio
             ]);
 
-        AcopioModel::where('productor_id', $productorId)
+        $acopios = AcopioModel::where('productor_id', $productorId)
             ->whereBetween('fecha', [
                 $this->inicioSemana,
                 $this->finSemana
             ])
             ->where('tipo_semana', $this->tipoSemana)
-            ->get()
-            ->each(function ($acopio) use ($precio) {
+            ->get();
 
-                $acopio->update([
-                    'precio' => $precio,
-                    'total' => $acopio->litros * $precio,
-                ]);
-            });
+        foreach ($acopios as $acopio) {
+
+            $acopio->precio = $precio;
+
+            $acopio->total = $acopio->litros * $precio;
+
+            $acopio->save();
+        }
 
         cache()->forget($this->cacheKey());
     }
