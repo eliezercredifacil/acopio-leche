@@ -13,3 +13,11 @@ Route::get('productores', [ProductorController::class, 'index']);
 Route::post('acopio', [AcopioController::class, 'store']);
 
 Route::get('acopio', [AcopioController::class, 'show']);
+
+Route::get('fecha', function () {
+
+    return response()->json([
+        'fecha' => now()->format('Y-m-d')
+    ]);
+
+});

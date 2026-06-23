@@ -14,4 +14,11 @@ class UsuarioApp extends Model
         'localidad_id',
         'activo'
     ];
+
+   
+    //Relación con la localidad.
+    public function localidad()
+    {
+        return $this->belongsTo(Localidad::class);
+    }
 }

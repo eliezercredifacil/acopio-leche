@@ -19,10 +19,25 @@ class ProductorController extends Controller
             $request->localidad_id
         )
             ->orderBy('nombre')
-            ->get([
-                'id',
-                'nombre'
-            ]);
+            ->get()
+            ->map(function ($productor) {
+
+                $capturado = \App\Models\Acopio::where(
+                    'productor_id',
+                    $productor->id
+                )
+                    ->where(
+                        'fecha',
+                        now()->format('Y-m-d')
+                    )
+                    ->exists();
+
+                return [
+                    'id' => $productor->id,
+                    'nombre' => $productor->nombre,
+                    'capturado' => $capturado
+                ];
+            });
 
         return response()->json($productores);
     }

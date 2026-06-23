@@ -34,7 +34,7 @@ class AcopioController extends Controller
         $total = $request->litros * $precio;
 
         //Buscamos si ya existe un acopio para este productor en esta fecha.
-
+        sleep(1);
         $acopio = Acopio::updateOrCreate(
 
             // Campos para buscar
