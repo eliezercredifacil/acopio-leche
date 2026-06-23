@@ -33,8 +33,10 @@ class AcopioController extends Controller
 
         $total = $request->litros * $precio;
 
+        usleep(300000);
+        //sleep(1);
+
         //Buscamos si ya existe un acopio para este productor en esta fecha.
-        sleep(1);
         $acopio = Acopio::updateOrCreate(
 
             // Campos para buscar
@@ -52,7 +54,7 @@ class AcopioController extends Controller
                 'tipo_semana' => $productor->semana
             ]
         );
-
+        
         return response()->json([
             'ok' => true,
             'id' => $acopio->id,
