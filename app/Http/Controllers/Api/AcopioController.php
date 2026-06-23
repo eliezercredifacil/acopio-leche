@@ -54,7 +54,7 @@ class AcopioController extends Controller
                 'tipo_semana' => $productor->semana
             ]
         );
-        
+
         return response()->json([
             'ok' => true,
             'id' => $acopio->id,
@@ -70,4 +70,28 @@ class AcopioController extends Controller
             'litros' => $acopio?->litros
         ]);
     }
+
+    public function eliminar(Request $request)
+    {
+        $request->validate([
+            'productor_id' => 'required|integer',
+            'fecha' => 'required|date'
+        ]);
+
+        Acopio::where(
+            'productor_id',
+            $request->productor_id
+        )
+            ->where(
+                'fecha',
+                $request->fecha
+            )
+            ->delete();
+
+        return response()->json([
+            'ok' => true
+        ]);
+    }
+
+    
 }

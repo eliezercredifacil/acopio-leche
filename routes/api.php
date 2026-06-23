@@ -21,3 +21,5 @@ Route::get('fecha', function () {
     ]);
 
 });
+
+Route::post('acopio/eliminar', [AcopioController::class, 'eliminar']);

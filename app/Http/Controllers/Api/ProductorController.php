@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Productor;
+use App\Models\Acopio;
 use Illuminate\Http\Request;
 
 class ProductorController extends Controller
@@ -22,7 +23,7 @@ class ProductorController extends Controller
             ->get()
             ->map(function ($productor) {
 
-                $capturado = \App\Models\Acopio::where(
+                $acopio = Acopio::where(
                     'productor_id',
                     $productor->id
                 )
@@ -30,12 +31,13 @@ class ProductorController extends Controller
                         'fecha',
                         now()->format('Y-m-d')
                     )
-                    ->exists();
+                    ->first();
 
                 return [
                     'id' => $productor->id,
                     'nombre' => $productor->nombre,
-                    'capturado' => $capturado
+                    'capturado' => $acopio !== null,
+                    'litros' => $acopio?->litros
                 ];
             });
 
