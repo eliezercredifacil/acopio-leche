@@ -33,22 +33,30 @@ class AcopioController extends Controller
 
         $total = $request->litros * $precio;
 
-        /*
-         * Guardamos el acopio.
-         */
-        $acopio = Acopio::create([
-            'productor_id' => $productor->id,
-            'localidad_id' => $productor->localidad_id,
-            'fecha'        => $request->fecha,
-            'litros'       => $request->litros,
-            'precio'       => $precio,
-            'total'        => $total,
-            'tipo_semana'  => $productor->semana
-        ]);
+        //Buscamos si ya existe un acopio para este productor en esta fecha.
+
+        $acopio = Acopio::updateOrCreate(
+
+            // Campos para buscar
+            [
+                'productor_id' => $productor->id,
+                'fecha' => $request->fecha
+            ],
+
+            // Campos para crear o actualizar
+            [
+                'localidad_id' => $productor->localidad_id,
+                'litros' => $request->litros,
+                'precio' => $precio,
+                'total' => $total,
+                'tipo_semana' => $productor->semana
+            ]
+        );
 
         return response()->json([
             'ok' => true,
-            'id' => $acopio->id
+            'id' => $acopio->id,
+            'creado' => $acopio->wasRecentlyCreated
         ]);
     }
 }
