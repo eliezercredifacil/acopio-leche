@@ -59,4 +59,13 @@ class AcopioController extends Controller
             'creado' => $acopio->wasRecentlyCreated
         ]);
     }
+
+    public function show(Request $request)
+    {
+        $acopio = Acopio::where('productor_id', $request->productor_id)->where('fecha', $request->fecha)->first();
+
+        return response()->json([
+            'litros' => $acopio?->litros
+        ]);
+    }
 }

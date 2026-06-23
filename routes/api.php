@@ -12,3 +12,4 @@ Route::get('productores', [ProductorController::class, 'index']);
 
 Route::post('acopio', [AcopioController::class, 'store']);
 
+Route::get('acopio', [AcopioController::class, 'show']);
