@@ -13,6 +13,8 @@ use App\Models\TotalesAcopio;
 
 class Acopio extends Component
 {
+    public $titulo = 'Acopio semanal';
+
     public $fechas = [];
 
     public $localidades;

@@ -1,50 +1,25 @@
 <div>
     {{-- Because she competes with no one, no one can compete with her. --}}
 
-    <div class="mb-3 relative max-w-sm">
-        <input type="date" class="input bg-base-100" wire:model.lazy="fechaReporte" />
+    <div class="flex flex-wrap gap-2 mb-4">
+        <input type="date" class="input bg-base-100 flex-none w-40" wire:model.lazy="fechaReporte" />
 
         {{-- Spinner global --}}
         <div wire:loading.delay wire:target="fechaReporte">
             <span class="loading loading-spinner loading-md"></span>
         </div>
-    </div>
 
-    <!-- Botones para seleccionar tipo de semana -->
+        <!-- Botones para seleccionar tipo de semana -->
+        <select class="select appearance-none bg-base-100 flex-none w-48" wire:model.live="tipoSemana">
+            <option value="" disabled>Seleccionar Grupo</option>
+            <option value="A"> Domingo a Sábado </option>
+            <option value="B"> Viernes a Jueves </option>
+        </select>
 
-    <div class="flex gap-2 mb-4">
-
-        <div class="flex items-center gap-2 mb-4">
-
-            <button
-                wire:click="$set('tipoSemana', 'A')"
-                class="px-4 py-2 rounded btn btn-sm {{ $tipoSemana === 'A' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
-
-                @if($tipoSemana == 'A')
-                <i class="fa-solid fa-caret-right"></i>
-                @endif
-
-                Domingo a Sábado
-            </button>
-
-            <button
-                wire:click="$set('tipoSemana', 'B')"
-                class="px-4 py-2 rounded btn btn-sm {{ $tipoSemana === 'B' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
-
-                @if($tipoSemana == 'B')
-                <i class="fa-solid fa-caret-right mr-1"></i>
-                @endif
-
-                Viernes a Jueves
-            </button>
-
-            {{-- Spinner global --}}
-            <div wire:loading.delay wire:target="tipoSemana">
-                <span class="loading loading-spinner loading-md"></span>
-            </div>
-
+        {{-- Spinner global --}}
+        <div wire:loading.delay wire:target="tipoSemana">
+            <span class="loading loading-spinner loading-md"></span>
         </div>
-
     </div>
 
     <!-- Rotulo de la semana -->

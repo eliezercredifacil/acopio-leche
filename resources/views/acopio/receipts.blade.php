@@ -1,8 +1,16 @@
 <x-app-layout>
 
+    <x-slot name="title">
+        Recibos
+    </x-slot>
+
+    <x-slot name="favicon">
+        {{ asset('images/icons/impresora.png') }}
+    </x-slot>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight">
-            Acopio
+        <h2 class="font-semibold text-xl">
+            🧾 Recibos
         </h2>
     </x-slot>
 

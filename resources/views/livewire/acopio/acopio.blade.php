@@ -2,6 +2,7 @@
     {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
 
     <div class="flex flex-wrap gap-2 mb-4">
+
         <input type="date" class="input bg-base-100 flex-none w-40" wire:model.lazy="fechaReporte" />
 
         {{-- Spinner global --}}
@@ -38,60 +39,6 @@
         </div>
 
     </div>
-
-    {{--
-    <div class="flex gap-2 mb-4 overflow-x-auto">
-
-        
-        @foreach ($localidades as $localidad)
-            <button wire:click="$set('localidadId', {{ $localidad->id }})"
-                class="px-4 py-2 rounded btn btn-sm
-                {{ $localidadId == $localidad->id ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
-
-                @if ($localidadId == $localidad->id)
-                    <i class="fa-solid fa-caret-right mr-1"></i>
-                @endif
-
-                {{ $localidad->nombre }}
-            </button>
-        @endforeach
-        
-    </div>
-    --}}
-
-
-    <!-- Botones para seleccionar tipo de semana -->
-
-    {{--
-
-    <div class="flex gap-2 mb-4">
-
-        <div class="flex items-center gap-2 mb-4">
-
-            <button wire:click="$set('tipoSemana', 'A')"
-                class="px-4 py-2 rounded btn btn-sm {{ $tipoSemana === 'A' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
-
-                @if ($tipoSemana == 'A')
-                    <i class="fa-solid fa-caret-right"></i>
-                @endif
-
-                Domingo a Sábado
-            </button>
-
-            <button wire:click="$set('tipoSemana', 'B')"
-                class="btn btn-sm px-2 py-2 rounded {{ $tipoSemana === 'B' ? 'bg-primary font-bold text-white' : 'bg-gray-200 dark:bg-gray-700' }}">
-
-                @if ($tipoSemana == 'B')
-                    <i class="fa-solid fa-caret-right"></i>
-                @endif
-
-                Viernes a Jueves
-            </button>
-
-        </div>
-
-    </div>
-    --}}
 
     <!-- Rotulo de la semana -->
     <div class="flex gap-2 mb-2">

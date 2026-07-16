@@ -1,8 +1,16 @@
 <x-app-layout>
 
+    <x-slot name="title">
+        Resumen Semanal
+    </x-slot>
+
+    <x-slot name="favicon">
+        {{ asset('images/icons/libro.png') }}
+    </x-slot>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight">
-            Acopio
+        <h2 class="font-semibold text-xl">
+            📚 Resumen Semanal
         </h2>
     </x-slot>
 
