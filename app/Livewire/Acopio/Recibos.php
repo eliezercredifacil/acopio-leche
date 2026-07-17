@@ -27,6 +27,8 @@ class Recibos extends Component
 
     public $localidades;
 
+    public $buscarProductor = '';
+
     protected $queryString = ['localidadId', 'tipoSemana', 'fechaReporte'];
 
     public function mount()
@@ -60,6 +62,11 @@ class Recibos extends Component
         $this->resetPage();
 
         $this->calcularSemana();
+    }
+
+    public function updatedBuscarProductor()
+    {
+        $this->resetPage();
     }
 
     public function calcularSemana()
@@ -114,49 +121,69 @@ class Recibos extends Component
 
     public function render()
     {
-        $productores = Productor::with([
+        if (trim($this->buscarProductor) !== '') {
 
-            'acopios' => function ($q) {
+            $productores = Productor::search($this->buscarProductor)
 
-                $q->whereBetween('fecha', [
-                    $this->inicioSemana,
-                    $this->finSemana
-                ])
+                ->query(function ($query) {
 
-                    ->where(
-                        'tipo_semana',
-                        $this->tipoSemana
-                    )
+                    $query->with([
 
-                    ->orderBy('fecha');
-            },
+                        'localidad',
 
-            'deductions' => function ($q) {
+                        'acopios' => function ($q) {
 
-                $q->where(
-                    'semana_inicio',
-                    $this->inicioSemana
-                );
-            }
+                            $q->whereBetween('fecha', [
+                                $this->inicioSemana,
+                                $this->finSemana
+                            ])
+                                ->where('tipo_semana', $this->tipoSemana)
+                                ->orderBy('fecha');
+                        },
 
-        ])
+                        'deductions' => function ($q) {
 
-            ->where('activo', true)
+                            $q->where('semana_inicio', $this->inicioSemana);
+                        }
 
-            ->where(
-                'localidad_id',
-                $this->localidadId
-            )
+                    ])
+                        ->where('activo', true)
+                        ->where('localidad_id', $this->localidadId)
+                        ->where('semana', $this->tipoSemana);
+                })
+                ->paginate(12);
+        } else {
 
-            ->where(
-                'semana',
-                $this->tipoSemana
-            )
+            $productores = Productor::with([
 
-            ->orderBy('nombre')
+                'localidad',
 
-            ->paginate(10);        
+                'acopios' => function ($q) {
+
+                    $q->whereBetween('fecha', [
+                        $this->inicioSemana,
+                        $this->finSemana
+                    ])
+                        ->where('tipo_semana', $this->tipoSemana)
+                        ->orderBy('fecha');
+                },
+
+                'deductions' => function ($q) {
+
+                    $q->where('semana_inicio', $this->inicioSemana);
+                }
+
+            ])
+
+                ->where('activo', true)
+                ->where('localidad_id', $this->localidadId)
+                ->where('semana', $this->tipoSemana)
+                ->orderBy('nombre')
+                ->paginate(12);
+        }
 
         return view('livewire.acopio.recibos', compact('productores'));
     }
+
+
 }

@@ -39,8 +39,20 @@
             <span class="loading loading-spinner loading-md"></span>
         </div>
 
+        {{-- INPUT PARA BUSCAR PRODUCTOR PARA IMPRIMIR RECIBO --}}
+
+        <div class="flex-none w-64">
+            <input type="text" class="input bg-base-100 w-full" wire:model.live.debounce.300ms="buscarProductor" placeholder="🔍 Buscar productor" />
+        </div>
+
+        {{-- Spinner global --}}
+        <div wire:loading.delay wire:target="buscarProductor">
+            <span class="loading loading-spinner loading-md"></span>
+        </div>
+
     </div>
 
+    
     <!-- Rotulo de la semana -->
     <div class="flex gap-2 mb-2">
         <h2 class="card-title font-bold">{{ $this->tituloSemana }}
