@@ -10,7 +10,7 @@
             <span class="loading loading-spinner loading-md"></span>
         </div>
 
-        <select class="select appearance-none bg-base-100 flex-none w-48" wire:model.live="localidadId">
+        <select class="select appearance-none bg-base-100 flex-none w-40" wire:model.live="localidadId">
 
             <option value="" disabled>Seleccionar Comarca</option>
 
@@ -27,7 +27,7 @@
             <span class="loading loading-spinner loading-md"></span>
         </div>
 
-        <select class="select appearance-none bg-base-100 flex-none w-48" wire:model.live="tipoSemana">
+        <select class="select appearance-none bg-base-100 flex-none w-40" wire:model.live="tipoSemana">
             <option value="" disabled>Seleccionar Grupo</option>
             <option value="A"> Domingo a Sábado </option>
             <option value="B"> Viernes a Jueves </option>
