@@ -26,10 +26,10 @@ class CrearProductor extends Component
 
     protected $rules = [
         'nombre' => 'required|string|min:5',
-        'cedula' => 'required|unique:productors,cedula',
-        'telefono' => 'required|numeric|min:8',
+        //'cedula' => 'required|unique:productors,cedula',
+        //'telefono' => 'required|numeric|min:8',
         'localidad_id' => 'required',
-        'direccion' => 'required|string|min:5',
+        //'direccion' => 'required|string|min:5',
         'semana' => 'required',
         'precio_litro' => 'required|numeric|min:0'
     ];

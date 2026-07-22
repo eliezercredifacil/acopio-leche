@@ -37,12 +37,12 @@ class EditarProductor extends Component
     {
         $this->validate([
             'nombre' => ['required', 'string'],
-            'cedula' => ['required', 'string', Rule::unique('productors', 'cedula')->ignore($this->productor->id)],
-            'telefono' => ['required', 'string'],
+            //'cedula' => ['required', 'string', Rule::unique('productors', 'cedula')->ignore($this->productor->id)],
+            //'telefono' => ['required', 'string'],
             'localidad_id' => ['required'],
             'semana' => ['required'],
             'precio_litro' => ['required', 'numeric', 'min:0'],
-            'direccion' => ['required'],
+            //'direccion' => ['required'],
         ]);
 
         // 🔹 Asignar valores manualmente
