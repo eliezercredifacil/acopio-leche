@@ -40,8 +40,8 @@ class Acopio extends Component
         // Primera localidad por defecto
         $this->localidadId ??= $this->localidades->first()?->id;
 
-        // Semana A por defecto
-        $this->tipoSemana ??= 'A';
+        // Semana B por defecto
+        $this->tipoSemana ??= 'B';
 
         // Fecha actual por defecto
         $this->fechaReporte ??= now()->toDateString();

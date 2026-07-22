@@ -15,9 +15,9 @@
             <option value="" disabled>Seleccionar Comarca</option>
 
             @foreach ($localidades as $localidad)
-            <option value="{{ $localidad->id }}">
-                {{ $localidad->nombre }}
-            </option>
+                <option value="{{ $localidad->id }}">
+                    {{ $localidad->nombre }}
+                </option>
             @endforeach
 
         </select>
@@ -30,8 +30,8 @@
         <!-- Botones para seleccionar tipo de semana -->
         <select class="select appearance-none bg-base-100 flex-none w-40" wire:model.live="tipoSemana">
             <option value="" disabled>Seleccionar Grupo</option>
-            <option value="A"> Domingo a Sábado </option>
             <option value="B"> Viernes a Jueves </option>
+            <option value="A"> Domingo a Sábado </option>
         </select>
 
         {{-- Spinner global --}}
@@ -42,7 +42,8 @@
         {{-- INPUT PARA BUSCAR PRODUCTOR PARA IMPRIMIR RECIBO --}}
 
         <div class="flex-none w-64">
-            <input type="text" class="input bg-base-100 w-40" wire:model.live.debounce.300ms="buscarProductor" placeholder="🔍 Buscar productor" />
+            <input type="text" class="input bg-base-100 w-46" wire:model.live.debounce.300ms="buscarProductor"
+                placeholder="🔍 Buscar productor" />
         </div>
 
         {{-- Spinner global --}}
@@ -50,9 +51,19 @@
             <span class="loading loading-spinner loading-md"></span>
         </div>
 
+        <a href="{{ route('recibos.print-all', ['localidad' => $localidadId, 'inicio' => $inicioSemana, 'fin' => $finSemana, 'tipo' => $tipoSemana]) }}"
+            target="_blank"
+            class="btn bg-green-700 text-white hover:bg-orange-800 dark:bg-green-600 dark:hover:bg-orange-700">
+
+            <i class="fa-solid fa-print"></i>
+
+            Imprimir todos los recibos
+
+        </a>
+
     </div>
 
-    
+
     <!-- Rotulo de la semana -->
     <div class="flex gap-2 mb-2">
         <h2 class="card-title font-bold">{{ $this->tituloSemana }}
@@ -62,122 +73,120 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         @foreach ($productores as $productor)
+            <div class="card bg-base-100 shadow border border-gray-600">
 
-        <div class="card bg-base-100 shadow border border-gray-600">
+                <div class="card-body">
 
-            <div class="card-body">
+                    <div class="uppercase font-bold">
+                        <i class="fa-solid fa-location-dot text-green-700 dark:text-green-500"></i>
+                        {{ $productor->localidad->nombre }}
+                    </div>
 
-                <div class="uppercase font-bold">
-                    <i class="fa-solid fa-location-dot text-green-700 dark:text-green-500"></i>
-                    {{ $productor->localidad->nombre }}
-                </div>
+                    <h2 class="card-title">
+                        <i class="fa-regular fa-calendar-days"></i>
+                        {{ $this->tituloSemana }}
+                    </h2>
 
-                <h2 class="card-title">
-                    <i class="fa-regular fa-calendar-days"></i>
-                    {{ $this->tituloSemana }}
-                </h2>
+                    <h2 class="card-title font-bold">
+                        <i class="fa-solid fa-user"></i>
+                        {{ $productor->nombre }}
+                    </h2>
 
-                <h2 class="card-title font-bold">
-                    <i class="fa-solid fa-user"></i>
-                    {{ $productor->nombre }}
-                </h2>
+                    <table class="table-auto border">
 
-                <table class="table-auto border">
+                        <thead>
 
-                    <thead>
+                            <tr class="bg-green-700 text-white">
+                                <th class="border border-gray-300">Día</th>
+                                <th class="border border-gray-300">Litros</th>
+                                <th class="border border-gray-300">Córdobas</th>
+                            </tr>
 
-                        <tr class="bg-green-700 text-white">
-                            <th class="border border-gray-300">Día</th>
-                            <th class="border border-gray-300">Litros</th>
-                            <th class="border border-gray-300">Córdobas</th>
-                        </tr>
+                        </thead>
 
-                    </thead>
+                        <tbody>
 
-                    <tbody>
+                            @foreach ($productor->acopios as $acopio)
+                                <tr
+                                    class="{{ $loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-800' }}">
 
-                        @foreach ($productor->acopios as $acopio)
+                                    <td class="border border-gray-300 dark:border-gray-600">
+                                        {{ \Carbon\Carbon::parse($acopio->fecha)->locale('es')->translatedFormat('D d') }}
+                                    </td>
 
-                        <tr class="{{ $loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-800' }}">
+                                    <td class="text-center border border-gray-300 dark:border-gray-600">
+                                        {{ number_format($acopio->litros, 0) }}
+                                    </td>
 
-                            <td class="border border-gray-300 dark:border-gray-600">
-                                {{ \Carbon\Carbon::parse($acopio->fecha)->locale('es')->translatedFormat('D d') }}
-                            </td>
+                                    <td class="text-right border border-gray-300 dark:border-gray-600">
+                                        C$ {{ number_format($acopio->total, 0) }}
+                                    </td>
 
-                            <td class="text-center border border-gray-300 dark:border-gray-600">
-                                {{ number_format($acopio->litros, 0) }}
-                            </td>
+                                </tr>
+                            @endforeach
 
-                            <td class="text-right border border-gray-300 dark:border-gray-600">
-                                C$ {{ number_format($acopio->total, 0) }}
-                            </td>
+                        </tbody>
 
-                        </tr>
+                        <tfoot>
 
-                        @endforeach
+                            <tr
+                                class="{{ $loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-800' }}">
 
-                    </tbody>
+                                <th class="border border-gray-300 text-left">Totales</th>
 
-                    <tfoot>
+                                <th class="border border-gray-300 text-center">
+                                    {{ number_format($productor->totales_recibo['litros'], 0) }}
+                                </th>
 
-                        <tr class="{{ $loop->even ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-800' }}">
+                                <th class="border border-gray-300 text-right">
+                                    C$ {{ number_format($productor->totales_recibo['cordobas'], 0) }}
+                                </th>
 
-                            <th class="border border-gray-300 text-left">Totales</th>
+                            </tr>
 
-                            <th class="border border-gray-300 text-center">
-                                {{ number_format($productor->totales_recibo['litros'], 0) }}
-                            </th>
+                            <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                                <th colspan="2">% Deducción por compra</th>
 
-                            <th class="border border-gray-300 text-right">
-                                C$ {{ number_format($productor->totales_recibo['cordobas'], 0) }}
-                            </th>
+                                <th class="border border-gray-300 text-right">
+                                    C$ {{ number_format($productor->totales_recibo['porcentaje_deduccion'], 0) }}
+                                </th>
+                            </tr>
 
-                        </tr>
+                            <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                                <th colspan="2" class="border border-gray-300">Anticipos / Adelantos</th>
 
-                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
-                            <th colspan="2">% Deducción por compra</th>
+                                <th class="border border-gray-300 text-right">
+                                    C$ {{ number_format($productor->totales_recibo['otras_deducciones'], 0) }}
+                                </th>
+                            </tr>
 
-                            <th class="border border-gray-300 text-right">
-                                C$ {{ number_format( $productor->totales_recibo['porcentaje_deduccion'], 0 ) }}
-                            </th>
-                        </tr>
+                            <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
+                                <th colspan="2" class="border border-gray-300">Neto a recibir</th>
 
-                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
-                            <th colspan="2" class="border border-gray-300">Anticipos / Adelantos</th>
+                                <th class="border border-gray-300 text-right">
+                                    C$ {{ number_format($productor->totales_recibo['neto'], 0) }}
+                                </th>
+                            </tr>
 
-                            <th class="border border-gray-300 text-right">
-                                C$ {{ number_format( $productor->totales_recibo['otras_deducciones'], 0 ) }}
-                            </th>
-                        </tr>
+                        </tfoot>
 
-                        <tr class="odd:bg-gray-100 even:bg-gray-200 dark:odd:bg-gray-700 dark:even:bg-gray-800">
-                            <th colspan="2" class="border border-gray-300">Neto a recibir</th>
+                    </table>
 
-                            <th class="border border-gray-300 text-right">
-                                C$ {{ number_format( $productor->totales_recibo['neto'], 0 ) }}
-                            </th>
-                        </tr>
+                    <div class="mt-2">
 
-                    </tfoot>
+                        <a role="button"
+                            href="{{ route('recibos.print', ['productor' => $productor->id, 'inicio' => $inicioSemana, 'fin' => $finSemana, 'tipo' => $tipoSemana]) }}"
+                            target="_blank"
+                            class="btn btn-xs btn-outline text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
+                            <i class="fa-solid fa-print"></i>
+                            Imprimir recibo
+                        </a>
 
-                </table>
-
-                <div class="mt-2">
-
-                    <a role="button" href="{{ route('recibos.print',['productor' => $productor->id,'inicio' => $inicioSemana,'fin' => $finSemana,'tipo' => $tipoSemana,]) }}" target="_blank"
-                        class="btn btn-xs btn-outline text-black bg-gray-200 dark:bg-gray-700 dark:text-white">
-                        <i class="fa-solid fa-print"></i>
-                        Imprimir recibo
-                    </a>
+                    </div>
 
                 </div>
 
             </div>
-
-        </div>
-
-
-
         @endforeach
     </div>
 

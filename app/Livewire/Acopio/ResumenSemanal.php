@@ -11,7 +11,7 @@ use App\Models\Deduction;
 
 class ResumenSemanal extends Component
 {
-    public $tipoSemana = 'A';
+    public $tipoSemana = 'B';
 
     public $fechaReporte;
 

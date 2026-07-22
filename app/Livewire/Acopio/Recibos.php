@@ -15,7 +15,7 @@ class Recibos extends Component
 
     public $fechaReporte;
 
-    public $tipoSemana = 'A';
+    public $tipoSemana = 'B';
 
     public $localidadId;
 
